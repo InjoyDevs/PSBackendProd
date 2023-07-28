@@ -13,10 +13,8 @@ import {
 } from 'typeorm';
 import { Role } from '../../roles/entities/role.entity';
 import { Status } from '../../statuses/entities/status.entity';
-import { FileEntity } from '../../files/entities/file.entity';
 import bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
-import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
@@ -24,8 +22,6 @@ export class User extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // For "string | null" we need to use String type.
-  // More info: https://github.com/typeorm/typeorm/issues/2567
   @Column({ type: String, unique: true, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
   email: string | null;
@@ -51,10 +47,6 @@ export class User extends EntityHelper {
     }
   }
 
-  @Column({ default: AuthProvidersEnum.email })
-  @Expose({ groups: ['me', 'admin'] })
-  provider: string;
-
   @Index()
   @Column({ type: String, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
@@ -67,11 +59,6 @@ export class User extends EntityHelper {
   @Index()
   @Column({ type: String, nullable: true })
   lastName: string | null;
-
-  @ManyToOne(() => FileEntity, {
-    eager: true,
-  })
-  photo?: FileEntity | null;
 
   @ManyToOne(() => Role, {
     eager: true,
