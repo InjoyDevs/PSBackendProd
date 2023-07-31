@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import path from 'path';
@@ -10,7 +9,6 @@ import { HeaderResolver } from 'nestjs-i18n';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
-import { SessionModule } from './session/session.module';
 import { RecipeModule } from './recipe/recipe.module';
 import { DeviceModule } from './device/device.module';
 import { IngredientModule } from './ingredient/ingredient.module';
