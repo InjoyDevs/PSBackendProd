@@ -7,7 +7,10 @@ import { IngredientDTO } from './dto/ingredient.dto';
 
 @Injectable()
 export class IngredientService {
-  createIngredient(ingredient: Ingredient): Ingredient | PromiseLike<Ingredient> {
+  createIngredient(
+    /* eslint-disable */
+    ingredient: Ingredient,
+  ): Ingredient | PromiseLike<Ingredient> {
     throw new Error('Method not implemented.');
   }
   constructor(
@@ -25,11 +28,15 @@ export class IngredientService {
   }
 
   async findByRecipeId(recipeId: number): Promise<Ingredient[]> {
-    return this.ingredientRepository.find({ where: { recipe: { id: recipeId } } });
+    return this.ingredientRepository.find({
+      where: { recipe: { id: recipeId } },
+    });
   }
 
   async update(id: number, ingredientDto: IngredientDTO): Promise<Ingredient> {
-    const ingredient = await this.ingredientRepository.findOne({where:{id}});
+    const ingredient = await this.ingredientRepository.findOne({
+      where: { id },
+    });
     if (!ingredient) {
       throw new Error('Ingredient not found');
     }

@@ -21,6 +21,6 @@ export class Recipe {
   @Column()
   servings: number;
 
-  @OneToMany(() => Ingredient, ingredient => ingredient.recipe)
+  @OneToMany(() => Ingredient, (ingredient) => ingredient.recipe)
   ingredients: Ingredient[];
 }
