@@ -38,6 +38,8 @@ export type DatabaseConfig = {
   cert?: string;
 };
 
+export type SecondaryDatabaseConfig = DatabaseConfig;
+
 export type FacebookConfig = {
   appId?: string;
   appSecret?: string;
@@ -85,4 +87,5 @@ export type AllConfigType = {
   google: GoogleConfig;
   mail: MailConfig;
   twitter: TwitterConfig;
+  secondary_database: SecondaryDatabaseConfig;
 };

@@ -1,14 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Ingredient } from 'src/ingredient/entities/ingredient.entity';
 
 @Entity()
 export class Recipe {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text' })
+  @Column()
   name: string;
 
-  // TODO: Update this to the actual db fields
-  @Column({ type: 'json' })
-  details: object;
+  @Column()
+  description: string;
+
+  @Column()
+  preparation_time: number;
+
+  @Column()
+  cooking_time: number;
+
+  @Column()
+  servings: number;
+
+  @OneToMany(() => Ingredient, (ingredient) => ingredient.recipe)
+  ingredients: Ingredient[];
 }

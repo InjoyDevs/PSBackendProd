@@ -1,17 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// src/ingredients/ingredient.entity.ts
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Recipe } from 'src/recipe/entities/recipe.entity';
 
 @Entity()
 export class Ingredient {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text' })
+  @Column()
   name: string;
 
-  // TODO: Update this to the actual db fields
-  @Column({ type: 'json' })
-  batchProperties: object;
+  @Column()
+  quantity: number;
 
-  @Column({ type: 'float' })
-  referenceValue: number;
+  @ManyToOne(() => Recipe, (recipe) => recipe.ingredients, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'recipe_id' })
+  recipe: Recipe;
 }
