@@ -55,8 +55,9 @@ import { TransferModule } from './transfer/transfer.module';
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
-    UsersModule,
-    SessionModule,
+    //Commenting Out Users Module and Session module fo now
+    // UsersModule,
+    // SessionModule,
     RecipeModule,
     DeviceModule,
     IngredientModule,
