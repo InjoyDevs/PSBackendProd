@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
+import secondaryDatabaseConfig from './config/secondary-database.config';
 import path from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,16 +17,25 @@ import { InventoryModule } from './inventory/inventory.module';
 import { OrderModule } from './order/order.module';
 import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
+import { SecondaryDataSource } from './database/secondary-data-source';
+import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, appConfig],
+      load: [databaseConfig, appConfig, secondaryDatabaseConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
+      dataSourceFactory: async (options: DataSourceOptions) => {
+        return new DataSource(options).initialize();
+      },
+    }),
+    TypeOrmModule.forRootAsync({
+      name: 'secondaryDatabase',
+      useClass: SecondaryTypeOrmConfigService,
       dataSourceFactory: async (options: DataSourceOptions) => {
         return new DataSource(options).initialize();
       },
