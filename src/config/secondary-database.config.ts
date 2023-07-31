@@ -73,7 +73,7 @@ class EnvironmentVariablesValidator {
   SECONDARY_DATABASE_CERT: string;
 }
 
-export default registerAs<DatabaseConfig>('database', () => {
+export default registerAs<DatabaseConfig>('secondary_database', () => {
   validateConfig(process.env, EnvironmentVariablesValidator);
 
   return {
