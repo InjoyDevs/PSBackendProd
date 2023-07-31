@@ -17,7 +17,6 @@ import { InventoryModule } from './inventory/inventory.module';
 import { OrderModule } from './order/order.module';
 import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
-import { SecondaryDataSource } from './database/secondary-data-source';
 import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
 
 @Module({
