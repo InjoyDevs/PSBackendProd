@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from './entities/ingredient.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,7 +15,7 @@ export class IngredientController {
     description: 'The ingredient has been successfully created.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async createIngredient(@Body() ingredient: Ingredient): Promise<Ingredient> {
-    return this.ingredientService.createIngredient(ingredient);
+  async createIngredient(): Promise<Ingredient> {
+    return this.ingredientService.createIngredient();
   }
 }
