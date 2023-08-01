@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
-set -e
 
-/opt/wait-for-it.sh postgres:5432
+export $(grep -v '^#' .env | xargs)
+
+git pull origin main
 npm run migration:run
-npm run seed:run
-npm run start:prod
+
+if [ "$NODE_ENV"== "production" ]
+then
+  pm2 start nest
+else
+  npm run start:prod
+fi
