@@ -3,6 +3,7 @@
 export $(grep -v '^#' .env | xargs)
 
 git pull origin main
+npm run build
 npm run migration:run
 
 if [ "$NODE_ENV"== "production" ]
