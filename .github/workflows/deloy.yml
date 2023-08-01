@@ -25,4 +25,4 @@ jobs:
       - run: bash ./startup.dev.sh
 
       # - run: npm run test
-      - run: pm2 restart dfx
+      - run: pm2 restart nest
