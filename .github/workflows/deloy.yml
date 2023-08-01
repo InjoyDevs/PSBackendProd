@@ -22,7 +22,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: bash ./startup.dev.sh
-
+      - name: Copy env # copy in your env file
+        run: 'echo -e "${{secrets.ENV}}" > .env'
       # - run: npm run test
+      - run: npm run build
       - run: pm2 restart nest
