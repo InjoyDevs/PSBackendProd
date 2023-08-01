@@ -14,18 +14,17 @@ import {
   StartTransferDto,
   UpdateTransferDto,
 } from './dto/transfer.dto';
-import { Device } from 'src/device/entities/device.entity';
-import { Recipe } from 'src/recipe/entities/recipe.entity';
+
+import { DeviceService } from 'src/device/device.service';
+import { RecipeService } from 'src/recipe/recipe.service';
 
 @Injectable()
 export class TransferService {
   constructor(
     @InjectRepository(Transfer)
     private transferRepository: Repository<Transfer>,
-    @InjectRepository(Device)
-    private deviceRepository: Repository<Device>,
-    @InjectRepository(Recipe)
-    private recipeRepository: Repository<Recipe>,
+    private deviceService: DeviceService,
+    private recipeService: RecipeService,
   ) {}
 
   async createTransfer(transfer: Transfer): Promise<Transfer> {
@@ -56,15 +55,15 @@ export class TransferService {
     recipeId: number,
     transferRecipeDto: TransferGetQtySetForRecipeDto,
   ) {
-    const findRecipe = await this.recipeRepository.findOne({
+    const findRecipe = await this.recipeService.findOne({
       where: { id: recipeId },
     });
     if (!findRecipe)
       throw new NotFoundException(`Recipe with id ${recipeId} not found`);
 
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: transferRecipeDto.deviceId },
-    });
+    const findDevice = await this.deviceService.getDeviceById(
+      transferRecipeDto.deviceId,
+    );
     if (!findDevice)
       throw new NotFoundException(
         `Device with id ${transferRecipeDto.deviceId} not found`,
@@ -78,9 +77,9 @@ export class TransferService {
   async transferGetQtysetForTempRecipe(
     transferGetQtySetForTempRecipe: TransferGetQtySetForTempRecipe,
   ) {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: transferGetQtySetForTempRecipe.deviceId },
-    });
+    const findDevice = await this.deviceService.getDeviceById(
+      transferGetQtySetForTempRecipe.deviceId,
+    );
 
     if (!findDevice)
       throw new NotFoundException(
@@ -101,9 +100,7 @@ export class TransferService {
         },
         HttpStatus.BAD_REQUEST,
       );
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
-    });
+    const findDevice = await this.deviceService.getDeviceById(deviceId);
     if (!findDevice)
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     // TODO: Implement start transfer service
@@ -118,9 +115,7 @@ export class TransferService {
         },
         HttpStatus.BAD_REQUEST,
       );
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
-    });
+    const findDevice = await this.deviceService.getDeviceById(deviceId);
     if (!findDevice)
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     // TODO: Implement update transfer service

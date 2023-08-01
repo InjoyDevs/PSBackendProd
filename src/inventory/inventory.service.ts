@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { Device } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
@@ -16,6 +16,16 @@ export class InventoryService {
 
   async createInventory(inventory: Inventory): Promise<Inventory> {
     return await this.inventoryRepository.save(inventory);
+  }
+
+  async getInventoriesByIds(ids: number[]): Promise<Inventory[]> {
+    const inventory = await this.inventoryRepository.findBy({
+      id: In(ids),
+    });
+    if (!inventory) {
+      throw new NotFoundException('Inventory not found');
+    }
+    return inventory;
   }
 
   async proprietaryServiceInitializeInventory(deviceId: number) {

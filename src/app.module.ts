@@ -18,6 +18,7 @@ import { OrderModule } from './order/order.module';
 import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
 import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({
   imports: [
@@ -25,6 +26,9 @@ import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-conf
       isGlobal: true,
       load: [databaseConfig, appConfig, secondaryDatabaseConfig],
       envFilePath: ['.env'],
+    }),
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,

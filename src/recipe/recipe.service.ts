@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Recipe } from './entities/recipe.entity';
 import { PersonalizeRecipeDto } from './dto/personalize-recipe.dto';
-import { Inventory } from 'src/inventory/entities/inventory.entity';
+
 import { RecipeDTO } from './dto/recipe.dto';
 import { InventoryService } from 'src/inventory/inventory.service';
 
@@ -13,8 +13,7 @@ export class RecipeService {
   constructor(
     @InjectRepository(Recipe)
     private recipeRepository: Repository<Recipe>,
-    @InjectRepository(Inventory)
-    private inventoryRepository: InventoryService,
+    private inventoryService: InventoryService,
   ) {}
 
   // to get all the recipes
@@ -60,14 +59,13 @@ export class RecipeService {
     if (!findRecipe) throw new NotFoundException('Recipe not found');
     // TODO:
     // This does not follow dependency inversion principle well so will need to refactor this
-    /*
-    const inventories = await this.inventoryRepository.findBy({
-      id: In(personalizeRecipeDto.IngredientIds),
-    });
+
+    const inventories = await this.inventoryService.getInventoriesByIds(
+      personalizeRecipeDto.IngredientIds,
+    );
 
     if (inventories.length !== personalizeRecipeDto.IngredientIds.length)
       throw new NotFoundException('One or more ingredients were not found');
-    */
 
     // TODO:
     // Update the recipe with the given Ingredients and percentages

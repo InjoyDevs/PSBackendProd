@@ -22,4 +22,11 @@ export class DeviceService {
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     // TODO:: implement code to update/add this device to the in-memory SQLite DB
   }
+  async getDeviceById(id: number): Promise<Device> {
+    const device = await this.deviceRepository.findOne({ where: { id } });
+    if (!device) {
+      throw new NotFoundException('Device not found');
+    }
+    return device;
+  }
 }
