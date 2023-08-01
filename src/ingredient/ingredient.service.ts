@@ -8,6 +8,10 @@ import { IngredientDTO } from './dto/ingredient.dto';
 @Injectable()
 export class IngredientService {
   createIngredient(): Ingredient | PromiseLike<Ingredient> {
+  createIngredient(
+    /* eslint-disable */
+    ingredient: Ingredient,
+  ): Ingredient | PromiseLike<Ingredient> {
     throw new Error('Method not implemented.');
   }
 

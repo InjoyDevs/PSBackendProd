@@ -18,4 +18,9 @@ export class PumpController {
   async createPump(@Body() pump: Pump): Promise<Pump> {
     return this.pumpService.createPump(pump);
   }
+
+  @Post('run-cip')
+  async runCIP() {
+    return await this.pumpService.runCIP();
+  }
 }

@@ -13,4 +13,8 @@ export class PumpService {
   async createPump(pump: Pump): Promise<Pump> {
     return await this.pumpRepository.save(pump);
   }
+
+  async runCIP() {
+    // TODO: Implement run Clean-In-Place (CIP) process.
+  }
 }
