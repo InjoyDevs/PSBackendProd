@@ -9,5 +9,6 @@ import { InventoryModule } from 'src/inventory/inventory.module';
   imports: [TypeOrmModule.forFeature([Recipe]), InventoryModule],
   providers: [RecipeService],
   controllers: [RecipeController],
+  exports: [RecipeService],
 })
 export class RecipeModule {}
