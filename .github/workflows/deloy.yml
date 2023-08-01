@@ -27,4 +27,4 @@ jobs:
       # - run: npm run test
       - run: npm ci
       - run: npm run build
-      - run: pm2 restart nest
+      - run: bash ./startup.dev.sh
