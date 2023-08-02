@@ -27,6 +27,8 @@ jobs:
       # - run: npm run test
       - run: npm ci
       - run: npm run build
+      - run: npm install -g pm2
+      - run: pm2 start "npm run start:prod" --name "nest"
       - run: pm2 restart nest
       # - name: Run deploy script
       #   run: ./.github/scripts/startup.dev.sh
