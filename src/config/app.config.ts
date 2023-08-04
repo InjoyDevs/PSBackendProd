@@ -9,6 +9,7 @@ import {
   IsUrl,
   Max,
   Min,
+  IsByteLength,
 } from 'class-validator';
 
 enum Environment {
@@ -47,6 +48,12 @@ class EnvironmentVariablesValidator {
   @IsString()
   @IsOptional()
   APP_HEADER_LANGUAGE: string;
+
+  @IsByteLength(32)
+  SECRET_KEY: string;
+
+  @IsByteLength(23)
+  NONCE: string;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -63,6 +70,8 @@ export default registerAs<AppConfig>('app', () => {
       : process.env.PORT
       ? parseInt(process.env.PORT, 10)
       : 3000,
+    secretKey: process.env.SECRET_KEY || 'secret-key',
+    nonce: process.env.NONCE || 'nonce',
     apiPrefix: process.env.API_PREFIX || 'api',
     fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || 'en',
     headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',

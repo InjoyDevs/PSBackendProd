@@ -8,6 +8,8 @@ export type AppConfig = {
   apiPrefix: string;
   fallbackLanguage: string;
   headerLanguage: string;
+  secretKey: string;
+  nonce: string;
 };
 
 export type AppleConfig = {

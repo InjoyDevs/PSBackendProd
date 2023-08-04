@@ -1509,7 +1509,7 @@
     "webpack" "5.88.1"
     "webpack-node-externals" "3.0.0"
 
-"@nestjs/common@*", "@nestjs/common@^10.0.0", "@nestjs/common@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/common@^9.0.0 || ^10.0.0", "@nestjs/common@^9.3.7 || ^10.0.0", "@nestjs/common@10.1.2":
+"@nestjs/common@*", "@nestjs/common@^10.0.0", "@nestjs/common@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/common@^9.0.0 || ^10.0.0", "@nestjs/common@10.1.2":
   "integrity" "sha512-VS8xJtaYkUJHeQSnskZccPdlzd2A+j4aeFMTTmUJaUpTHsYBwUt1wWuZgyZeaSIIs0i0TcHla5rpFzRV3ZJmnQ=="
   "resolved" "https://registry.npmjs.org/@nestjs/common/-/common-10.1.2.tgz"
   "version" "10.1.2"
@@ -1528,7 +1528,7 @@
     "lodash" "4.17.21"
     "uuid" "9.0.0"
 
-"@nestjs/core@*", "@nestjs/core@^10.0.0", "@nestjs/core@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/core@^9.0.0 || ^10.0.0", "@nestjs/core@^9.3.7 || ^10.0.0", "@nestjs/core@10.1.2":
+"@nestjs/core@*", "@nestjs/core@^10.0.0", "@nestjs/core@^8.0.0 || ^9.0.0 || ^10.0.0", "@nestjs/core@^9.0.0 || ^10.0.0", "@nestjs/core@10.1.2":
   "integrity" "sha512-iOs29A/cgz8Ou8tOAeVPKYcfFoEiYbIwUvbg0UFI6VIiauo/zGalp/14ok1OL6PotrUU3mRkb0ZWYShINlvqIA=="
   "resolved" "https://registry.npmjs.org/@nestjs/core/-/core-10.1.2.tgz"
   "version" "10.1.2"
@@ -1539,14 +1539,6 @@
     "path-to-regexp" "3.2.0"
     "tslib" "2.6.1"
     "uid" "2.0.2"
-
-"@nestjs/devtools-integration@^0.1.5":
-  "integrity" "sha512-iwxvfxa3kzOulG/Fje82Ww80OVsA8rzYR+UAEKrdGExRRGQRGQ0+bHfG0XLlPG3XIuM5J2MRMo7x1bN8ZIs9Gg=="
-  "resolved" "https://registry.npmjs.org/@nestjs/devtools-integration/-/devtools-integration-0.1.5.tgz"
-  "version" "0.1.5"
-  dependencies:
-    "chalk" "^4.1.2"
-    "node-fetch" "^2.6.9"
 
 "@nestjs/jwt@10.1.0":
   "integrity" "sha512-iLwCGS25ybUxGS7i5j/Mwuyzvp/WxJftHlm8aLEBv5GV92apz6L1QVjxLdZrqXbzo++C8gdJauhzil8qitY+6w=="
@@ -2418,6 +2410,13 @@
   "version" "1.15.0"
   dependencies:
     "@types/mime" "*"
+    "@types/node" "*"
+
+"@types/sodium-native@^2.3.5":
+  "integrity" "sha512-a3DAIpW8+36XAY8aIR36JBQQsfOabxHuJwx11DL/PTvnbwEWPAXW66b8QbMi0r2vUnkOfREsketxdvjBmQxqDQ=="
+  "resolved" "https://registry.npmjs.org/@types/sodium-native/-/sodium-native-2.3.5.tgz"
+  "version" "2.3.5"
+  dependencies:
     "@types/node" "*"
 
 "@types/stack-utils@^2.0.0":
@@ -4262,7 +4261,7 @@
   "resolved" "https://registry.npmjs.org/eslint-visitor-keys/-/eslint-visitor-keys-3.4.1.tgz"
   "version" "3.4.1"
 
-"eslint@^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8", "eslint@^6.0.0 || ^7.0.0 || >=8.0.0", "eslint@^7.0.0 || ^8.0.0", "eslint@>=7.0.0", "eslint@>=8.0.0", "eslint@8.45.0":
+"eslint@^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8", "eslint@^6.0.0 || ^7.0.0 || >=8.0.0", "eslint@^7.0.0 || ^8.0.0", "eslint@^8.45.0", "eslint@>=7.0.0", "eslint@>=8.0.0":
   "integrity" "sha512-pd8KSxiQpdYRfYa9Wufvdoct3ZPQQuVuU5O6scNgMuOMYuxvH0IGaYK0wUFjo4UYYQQCUndlXiMbnxopwvvTiw=="
   "resolved" "https://registry.npmjs.org/eslint/-/eslint-8.45.0.tgz"
   "version" "8.45.0"
@@ -6706,6 +6705,11 @@
   dependencies:
     "whatwg-url" "^5.0.0"
 
+"node-gyp-build@^4.6.0":
+  "integrity" "sha512-NTZVKn9IylLwUzaKjkas1e4u2DLNcV4rdYagA4PWdPwW87Bi7z+BznyKSRwS/761tV/lzCGXplWsiaMjLqP2zQ=="
+  "resolved" "https://registry.npmjs.org/node-gyp-build/-/node-gyp-build-4.6.0.tgz"
+  "version" "4.6.0"
+
 "node-gyp@8.x":
   "integrity" "sha512-olTJRgUtAb/hOXG0E93wZDs5YiJlgbXxTwQAFHyNlRsXQnYzUaF2aGgujZbw+hR8aF4ZG/rST57bWMWD16jr9w=="
   "resolved" "https://registry.npmjs.org/node-gyp/-/node-gyp-8.4.1.tgz"
@@ -7783,6 +7787,13 @@
   dependencies:
     "ip" "^2.0.0"
     "smart-buffer" "^4.2.0"
+
+"sodium-native@^4.0.4":
+  "integrity" "sha512-faqOKw4WQKK7r/ybn6Lqo1F9+L5T6NlBJJYvpxbZPetpWylUVqz449mvlwIBKBqxEHbWakWuOlUt8J3Qpc4sWw=="
+  "resolved" "https://registry.npmjs.org/sodium-native/-/sodium-native-4.0.4.tgz"
+  "version" "4.0.4"
+  dependencies:
+    "node-gyp-build" "^4.6.0"
 
 "source-map-support@~0.5.20", "source-map-support@0.5.21":
   "integrity" "sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w=="
