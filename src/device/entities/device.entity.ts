@@ -19,4 +19,5 @@ export class Device {
   inventoryLevel: any;
   capacity: any;
   inventory: any;
+  inventoryId: number;
 }

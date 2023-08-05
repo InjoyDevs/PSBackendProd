@@ -4,6 +4,8 @@ import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { Device } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
+import { Exception } from 'handlebars';
+
 @Injectable()
 export class InventoryService {
   hubInventoryRepository: any;
@@ -47,33 +49,18 @@ export class InventoryService {
     // TODO: Implement logic to "Set Value for ALL device inventory"
   }
 
-  // async getLevel(deviceId: number) {
-  //   const findDevice = await this.deviceRepository.findOne({
-  //     where: { id: deviceId },
-  //   });
-  //   if (!findDevice) {
-  //     throw new NotFoundException(`Device with id ${deviceId} not found`);
-  //   }
-
-  //   // TODO:
-  //   // Implement the service such that:
-  //   // "-> It always returns value after some random value manipulation
-  //   // -> Run Random Recipe (will dispense all ingredient in any volume to ensure non-reversable engineering of algorithm)
-  //   // -> (Hub Inventory is stored in main database)"
-  // }
-
   // ------------------------get level ---------------------
-  async getLevel(deviceId: number) {
+  async getLevel(deviceId: number): Promise<number> {
     const findDevice = await this.deviceRepository.findOne({
       where: { id: deviceId },
     });
+
     if (!findDevice) {
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     }
 
     const currentInventory = findDevice.inventoryLevel;
-    const manipulatedValue =
-      currentInventory + Math.floor(Math.random() * 21) - 10;
+    const manipulatedValue = this.calculateManipulatedValue(currentInventory);
 
     const ingredientsDispensed = this.runRandomRecipe();
     await this.updateHubInventory(ingredientsDispensed);
@@ -81,7 +68,12 @@ export class InventoryService {
     return manipulatedValue;
   }
 
-  private runRandomRecipe() {
+  private calculateManipulatedValue(currentInventory: number): number {
+    const randomChange = Math.floor(Math.random() * 21) - 10;
+    return currentInventory + randomChange;
+  }
+
+  private runRandomRecipe(): { ingredient: string; volume: number }[] {
     const ingredients = ['ingredient1', 'ingredient2', 'ingredient3'];
     const ingredientsDispensed = ingredients.map((ingredient) => ({
       ingredient,
@@ -90,7 +82,12 @@ export class InventoryService {
     return ingredientsDispensed;
   }
 
-  private async updateHubInventory(ingredientsDispensed) {
+  private async updateHubInventory(
+    ingredientsDispensed: {
+      ingredient: string;
+      volume: number;
+    }[],
+  ): Promise<void> {
     const hubInventory: { ingredient: string; volume: number }[] = [];
 
     for (const dispensedIngredient of ingredientsDispensed) {
@@ -110,23 +107,9 @@ export class InventoryService {
     await this.hubInventoryRepository.save(hubInventory);
   }
 
-  // ------------------set level old --------------------------
-
-  // async setLevel(deviceId: number) {
-  //   const findDevice = await this.deviceRepository.findOne({
-  //     where: { id: deviceId },
-  //   });
-  //   if (!findDevice)
-  //     throw new NotFoundException(`Device with id ${deviceId} not found`);
-
-  //   // TODO:
-  //   // Implement the service such that:
-  //   // Set absolute value of inventory, but shall not be more than capacity or less than zero
-  // }
-
   // --------------------- Set Level -----------------------------
 
-  async setLevel(deviceId: number, level: number): Promise<void> {
+  async setLevel(deviceId: number, inventoryId: number): Promise<void> {
     const findDevice = await this.deviceRepository.findOne({
       where: { id: deviceId },
     });
@@ -135,53 +118,56 @@ export class InventoryService {
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     }
 
-    // Calculate the valid level within the range [0, capacity]
-    const validLevel = Math.max(0, Math.min(level, findDevice.capacity));
+    const findInventory = await this.inventoryRepository.findOne({
+      where: { id: inventoryId },
+    });
 
-    findDevice.inventory = validLevel;
+    if (!findInventory) {
+      throw new NotFoundException(`Inventory with id ${inventoryId} not found`);
+    }
+
+    if (
+      findDevice.inventoryLevel > findDevice.capacity ||
+      findDevice.inventoryLevel <= 0
+    ) {
+      throw new Error('Invalid inventory level');
+    }
+
+    findDevice.inventoryId = inventoryId;
 
     await this.deviceRepository.save(findDevice);
   }
 
-  // --------------------------alter level old ------------------------
-  // async alterLevel(deviceId: number) {
-  //   const findDevice = await this.deviceRepository.findOne({
-  //     where: { id: deviceId },
-  //   });
-  //   if (!findDevice)
-  //     throw new NotFoundException(`Device with id ${deviceId} not found`);
-
-  //   // TODO:
-  //   // Implement the service such that:
-  //   // Set relative change in value of inventory, but shall not be more than capacity or less than zero
-  // }
-
   // -----------------alter level -----------------------------
+
   async alterLevel(deviceId: number, changeAmount: number) {
     const findDevice = await this.deviceRepository.findOne({
       where: { id: deviceId },
     });
+
     if (!findDevice) {
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     }
 
-    // Calculate the new inventory level
     const newInventoryLevel = findDevice.inventory + changeAmount;
-
-    // Ensure the new inventory level is within bounds (0 to capacity)
     const boundedInventoryLevel = Math.max(
       0,
       Math.min(newInventoryLevel, findDevice.capacity),
     );
 
-    // Calculate the actual change applied to inventory
     const actualChange = boundedInventoryLevel - findDevice.inventory;
 
-    // Update the inventory level in the database
-    findDevice.inventory = boundedInventoryLevel;
-    await this.deviceRepository.save(findDevice);
+    if (
+      boundedInventoryLevel <= findDevice.capacity &&
+      boundedInventoryLevel >= 0
+    ) {
+      findDevice.inventory = boundedInventoryLevel;
+      await this.deviceRepository.save(findDevice);
 
-    return actualChange;
+      return actualChange;
+    } else {
+      throw new Exception('Invalid inventory change');
+    }
   }
 
   getProperties() {
