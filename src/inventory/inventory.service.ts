@@ -4,9 +4,9 @@ import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { Device } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
-import { RelativeLevelDTO } from './dto/relative-level.dto';
 @Injectable()
 export class InventoryService {
+  hubInventoryRepository: any;
   constructor(
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
@@ -107,7 +107,7 @@ export class InventoryService {
 
     console.log('Updated hub inventory:', hubInventory);
 
-    // await this.hubInventoryRepository.save(hubInventory);
+    await this.hubInventoryRepository.save(hubInventory);
   }
 
   // ------------------set level old --------------------------
