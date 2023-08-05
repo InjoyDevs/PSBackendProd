@@ -3,6 +3,7 @@
 ## How to use
 
 1. Inject the connection to the service to wanan use
+   and notice that the name of the connection is `secondaryDatabase`
 
 ```ts
 import { Injectable } from '@nestjs/common';
