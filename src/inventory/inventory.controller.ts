@@ -59,8 +59,8 @@ export class InventoryController {
     description: 'Inventory level set successfully',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async setLevel(@Param() id: number) {
-    return await this.inventoryService.setLevel(id);
+  async setLevel(@Param('id') id: number, @Body() body: { level: number }) {
+    return await this.inventoryService.setLevel(id, body.level);
   }
 
   @Put('level')
@@ -70,8 +70,11 @@ export class InventoryController {
     description: 'Inventory level altered successfully',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async alterLevel(@Param() id: number) {
-    return await this.inventoryService.alterLevel(id);
+  async alterLevel(
+    @Param('id') deviceId: number,
+    @Body('changeAmount') changeAmount: number,
+  ) {
+    return await this.inventoryService.alterLevel(deviceId, changeAmount);
   }
 
   @Get('property')
