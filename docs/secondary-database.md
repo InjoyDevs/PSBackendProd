@@ -17,6 +17,8 @@ export class YourService {
     private readonly connection1: Connection,
   ) {}
 
+  // this is how you can use the connection
+
   async executeRawQueryConnection1() {
     const rawData = await this.connection1.query('SELECT * FROM your_table');
     return rawData;
