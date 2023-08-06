@@ -16,10 +16,10 @@ export class Device {
 
   @Column({ type: 'text' })
   digitalSignature: string;
-  inventoryLevel: any;
-  capacity: any;
+  inventoryLevel: number;
+  capacity: number;
   inventory: any;
   inventoryId: number;
-  currentLevel: any;
-  level: any;
+  currentLevel: number;
+  level: number;
 }
