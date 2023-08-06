@@ -28,3 +28,9 @@ export class InventoryPropertyDto {
   @IsArray()
   ingredients?: IngredientBatch[];
 }
+
+export class InventoryAlterLevelDto {
+  deviceId: number;
+  changeAmount: number;
+  isIncreased: boolean;
+}

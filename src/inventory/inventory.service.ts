@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { Device } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
@@ -9,6 +14,7 @@ import { Exception } from 'handlebars';
 @Injectable()
 export class InventoryService {
   hubInventoryRepository: any;
+  dataSource: any;
   constructor(
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
@@ -50,124 +56,84 @@ export class InventoryService {
   }
 
   // ------------------------get level ---------------------
-  async getLevel(deviceId: number): Promise<number> {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
+  async getLevel(deviceId: number) {
+    const device = await this.deviceRepository.findOne({
+      where: {
+        id: deviceId,
+      },
     });
 
-    if (!findDevice) {
-      throw new NotFoundException(`Device with id ${deviceId} not found`);
+    if (!device) {
+      throw new NotFoundException();
     }
 
-    const currentInventory = findDevice.inventoryLevel;
-    const manipulatedValue = this.calculateManipulatedValue(currentInventory);
+    // Get current level
+    let currentLevel = device.currentLevel;
+    // Manipulate it randomly
+    currentLevel += Math.random() * 10 - 5;
 
-    const ingredientsDispensed = this.runRandomRecipe();
-    await this.updateHubInventory(ingredientsDispensed);
+    // Bound check
+    currentLevel = Math.max(0, Math.min(currentLevel, device.capacity));
 
-    return manipulatedValue;
-  }
-
-  private calculateManipulatedValue(currentInventory: number): number {
-    const randomChange = Math.floor(Math.random() * 21) - 10;
-    return currentInventory + randomChange;
-  }
-
-  private runRandomRecipe(): { ingredient: string; volume: number }[] {
-    const ingredients = ['ingredient1', 'ingredient2', 'ingredient3'];
-    const ingredientsDispensed = ingredients.map((ingredient) => ({
-      ingredient,
-      volume: Math.random() * 100,
-    }));
-    return ingredientsDispensed;
-  }
-
-  private async updateHubInventory(
-    ingredientsDispensed: {
-      ingredient: string;
-      volume: number;
-    }[],
-  ): Promise<void> {
-    const hubInventory: { ingredient: string; volume: number }[] = [];
-
-    for (const dispensedIngredient of ingredientsDispensed) {
-      const existingIngredient = hubInventory.find(
-        (item) => item.ingredient === dispensedIngredient.ingredient,
-      );
-
-      if (existingIngredient) {
-        existingIngredient.volume += dispensedIngredient.volume;
-      } else {
-        hubInventory.push(dispensedIngredient);
-      }
-    }
-
-    console.log('Updated hub inventory:', hubInventory);
-
-    await this.hubInventoryRepository.save(hubInventory);
+    return currentLevel;
   }
 
   // --------------------- Set Level -----------------------------
 
-  async setLevel(deviceId: number, inventoryId: number): Promise<void> {
-    const findDevice = await this.deviceRepository.findOne({
+  async setLevel(deviceId: number, level: number) {
+    const device = await this.deviceRepository.findOne({
       where: { id: deviceId },
     });
 
-    if (!findDevice) {
+    if (!device) {
       throw new NotFoundException(`Device with id ${deviceId} not found`);
     }
 
-    const findInventory = await this.inventoryRepository.findOne({
-      where: { id: inventoryId },
+    const inventory = await this.inventoryRepository.findOne({
+      where: {
+        device: { id: deviceId },
+      } as FindOptionsWhere<Inventory>,
     });
 
-    if (!findInventory) {
-      throw new NotFoundException(`Inventory with id ${inventoryId} not found`);
+    if (!inventory) {
+      throw new NotFoundException(`Inventory for device ${deviceId} not found`);
     }
 
-    if (
-      findDevice.inventoryLevel > findDevice.capacity ||
-      findDevice.inventoryLevel <= 0
-    ) {
-      throw new Error('Invalid inventory level');
+    if (level < 0 || level > device.capacity) {
+      throw new BadRequestException('Level must be between 0 and capacity');
     }
 
-    findDevice.inventoryId = inventoryId;
+    inventory.currentLevel = level;
 
-    await this.deviceRepository.save(findDevice);
+    await this.inventoryRepository.save(inventory);
   }
 
   // -----------------alter level -----------------------------
 
-  async alterLevel(deviceId: number, changeAmount: number) {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
+  async alterLevel(deviceId: number, change: number) {
+    const device = await this.deviceRepository.findOne({
+      where: {
+        id: deviceId,
+      },
     });
 
-    if (!findDevice) {
-      throw new NotFoundException(`Device with id ${deviceId} not found`);
+    if (!device) {
+      throw new NotFoundException();
     }
 
-    const newInventoryLevel = findDevice.inventory + changeAmount;
-    const boundedInventoryLevel = Math.max(
-      0,
-      Math.min(newInventoryLevel, findDevice.capacity),
-    );
+    // Get current level
+    let currentLevel = device.currentLevel;
 
-    const actualChange = boundedInventoryLevel - findDevice.inventory;
+    // Apply change
+    currentLevel += change;
 
-    if (
-      boundedInventoryLevel <= findDevice.capacity &&
-      boundedInventoryLevel >= 0
-    ) {
-      findDevice.inventory = boundedInventoryLevel;
-      await this.deviceRepository.save(findDevice);
+    // Bound check
+    currentLevel = Math.max(0, Math.min(currentLevel, device.capacity));
 
-      return actualChange;
-    } else {
-      throw new Exception('Invalid inventory change');
-    }
+    // Update level
+    device.currentLevel = currentLevel;
+
+    await this.deviceRepository.save(device);
   }
 
   getProperties() {
