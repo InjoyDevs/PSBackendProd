@@ -16,7 +16,7 @@ export class Inventory {
   @JoinColumn()
   deviceId: number;
 
-  @Column()
+  @Column({ type: 'int' })
   level: number;
 
   @Column({ type: 'int' })
@@ -27,5 +27,4 @@ export class Inventory {
 
   @Column({ type: 'float' })
   capacity: number;
-  currentLevel: number;
 }

@@ -1,4 +1,10 @@
-import { IsString, IsOptional, IsArray, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsArray,
+  IsNumber,
+  IsBoolean,
+} from 'class-validator';
 
 class IngredientBatch {
   @IsString()
@@ -29,8 +35,15 @@ export class InventoryPropertyDto {
   ingredients?: IngredientBatch[];
 }
 
-export class InventoryAlterLevelDto {
-  deviceId: number;
-  changeAmount: number;
-  isIncreased: boolean;
+export class SetInventoryDto {
+  @IsNumber()
+  level: number;
+}
+
+export class InventoryLevelChangeDto {
+  @IsNumber()
+  change: number;
+
+  @IsBoolean()
+  isPositive: boolean;
 }

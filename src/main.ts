@@ -28,12 +28,14 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  const url = configService.getOrThrow('app.backendDomain', { infer: true });
 
   const options = new DocumentBuilder()
     .setTitle('API')
     .setDescription('API docs')
     .setVersion('1.0')
     .addBearerAuth()
+    .addServer(url)
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

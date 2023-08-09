@@ -20,6 +20,5 @@ export class Device {
   capacity: number;
   inventory: any;
   inventoryId: number;
-  currentLevel: number;
   level: number;
 }
