@@ -17,6 +17,9 @@ export class Inventory {
   deviceId: number;
 
   @Column({ type: 'int' })
+  level: number;
+
+  @Column({ type: 'int' })
   ingredientId: number;
 
   @Column({ type: 'float' })

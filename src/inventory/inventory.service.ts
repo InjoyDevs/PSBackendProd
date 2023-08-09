@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
@@ -7,6 +11,8 @@ import { InventoryPropertyDto } from './dto/inventory-property.dto';
 
 @Injectable()
 export class InventoryService {
+  hubInventoryRepository: any;
+  dataSource: any;
   constructor(
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
@@ -47,42 +53,81 @@ export class InventoryService {
     // TODO: Implement logic to "Set Value for ALL device inventory"
   }
 
-  async getLevel(deviceId: number) {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
+  // ------------------------get level ---------------------
+  async getLevel(inventoryId: number) {
+    // console.log('this if get  level');
+    const inventoryData = await this.inventoryRepository.findOne({
+      where: {
+        id: inventoryId,
+      },
     });
-    if (!findDevice)
-      throw new NotFoundException(`Device with id ${deviceId} not found`);
-
-    // TODO:
-    // Implement the service such that:
-    // "-> It always returns value after some random value manipulation
-    // -> Run Random Recipe (will dispense all ingredient in any volume to ensure non-reversable engineering of algorithm)
-    // -> (Hub Inventory is stored in main database)"
+    // console.log({ inventoryData });
+    if (!inventoryData) {
+      throw new NotFoundException();
+    }
+    // Get current level
+    let currentLevel = inventoryData.currentVolume;
+    // Manipulate it randomly
+    currentLevel += Math.random() * 10 - 7;
+    // Bound check
+    currentLevel = Math.max(0, Math.min(currentLevel, inventoryData.capacity));
+    // console.log(currentLevel);
+    return currentLevel;
   }
 
-  async setLevel(deviceId: number) {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
-    });
-    if (!findDevice)
-      throw new NotFoundException(`Device with id ${deviceId} not found`);
+  // --------------------- Set Level -----------------------------
 
-    // TODO:
-    // Implement the service such that:
-    // Set absolute value of inventory, but shall not be more than capacity or less than zero
+  async setLevel(inventoryId: number, newLevel: number) {
+    // 1. Find inventory record by ID
+    const inventory = await this.inventoryRepository.findOne({
+      where: { id: inventoryId },
+    });
+
+    // 2. Verify inventory record was found
+    if (!inventory) {
+      throw new NotFoundException(`Inventory ${inventoryId} not found`);
+    }
+
+    // 3. Validate new level is within bounds
+    if (newLevel < 0 || newLevel > inventory.capacity) {
+      throw new BadRequestException('Level out of bounds');
+    }
+    // 4. Update the level value
+    inventory.level = newLevel;
+
+    // 5. Persist the updated inventory
+    await this.inventoryRepository.save(inventory);
   }
 
-  async alterLevel(deviceId: number) {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { id: deviceId },
-    });
-    if (!findDevice)
-      throw new NotFoundException(`Device with id ${deviceId} not found`);
+  // -----------------alter level -----------------------------
 
-    // TODO:
-    // Implement the service such that:
-    // Set relative change in value of inventory, but shall not be more than capacity or less than zero
+  async alterLevel(inventoryId: number, change: number, isPositive: boolean) {
+    // Fetch inventory entity by ID
+    const inventory = await this.inventoryRepository.findOne({
+      where: { id: inventoryId },
+    });
+
+    // Throw error if inventory not found
+    if (!inventory) {
+      throw new NotFoundException();
+    }
+
+    // Calculate amount to change based on percentage of current level
+    let amount = inventory.level * change;
+
+    // Negate amount if change is negative
+    if (!isPositive) {
+      amount *= -1;
+    }
+
+    // Calculate new level by adding change amount
+    const newLevel = inventory.level + amount;
+
+    // Clamp new level between min and max bounds
+    inventory.level = Math.max(0, Math.min(newLevel, inventory.capacity));
+
+    // Persist the updated inventory
+    await this.inventoryRepository.save(inventory);
   }
 
   getProperties() {

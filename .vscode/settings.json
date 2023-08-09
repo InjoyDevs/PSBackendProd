@@ -1,3 +1,12 @@
 {
-  "markdown.extension.toc.levels": "2..6"
+  "markdown.extension.toc.levels": "2..6",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "tea-disp-db",
+      "database": "C:\\Users\\shiva\\OneDrive - BENNETT UNIVERSITY\\INJOY_pvt_ltd\\INJOY\\PSBackendProd\\injoy-dev-db.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }
