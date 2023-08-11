@@ -99,24 +99,6 @@ export class InventoryController {
     );
   }
 
-  // @Put('level/:id')
-  // @ApiOperation({ summary: 'Alter inventory level for a device' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Inventory level altered successfully',
-  // })
-  // @ApiParam({
-  //   name: 'id',
-  //   description: 'Enter Inventory  Id',
-  // })
-  // @ApiResponse({ status: 403, description: 'Forbidden.' })
-  // async alterLevel(
-  //   @Param('id') deviceId: number,
-  //   @Body('changeAmount') changeAmount: number,
-  // ) {
-  //   return await this.inventoryService.alterLevel(deviceId, changeAmount);
-  // }
-
   @Get('property')
   @ApiOperation({ summary: 'Get encrypted properties for all batches' })
   async getProperties(): Promise<any> {

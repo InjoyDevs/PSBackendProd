@@ -69,6 +69,14 @@ export class InventoryService {
     let currentLevel = inventoryData.currentVolume;
     // Manipulate it randomly
     currentLevel += Math.random() * 10 - 7;
+
+    // TODO:
+    // Hub and despenser Policy willl be different
+    // hub actuall no issue we need actual level
+    // only need dispenser
+    // update its policy it
+    // micro-liter drops
+
     // Bound check
     currentLevel = Math.max(0, Math.min(currentLevel, inventoryData.capacity));
     // console.log(currentLevel);
@@ -101,11 +109,18 @@ export class InventoryService {
 
   // -----------------alter level -----------------------------
 
+  // TODO:
+  // require rights for api call for
+  // dispenser has right for all
+
   async alterLevel(inventoryId: number, change: number, isPositive: boolean) {
     // Fetch inventory entity by ID
     const inventory = await this.inventoryRepository.findOne({
       where: { id: inventoryId },
     });
+
+    //  TODO:
+    //  it should update alter level and set level in the main server
 
     // Throw error if inventory not found
     if (!inventory) {

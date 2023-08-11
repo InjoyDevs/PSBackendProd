@@ -46,4 +46,5 @@ export class InventoryLevelChangeDto {
 
   @IsBoolean()
   isPositive: boolean;
+  // subract add ispositive
 }
