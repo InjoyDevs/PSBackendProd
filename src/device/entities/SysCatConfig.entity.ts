@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 
 @Entity('sys_cat_config_n_values')
 export class SysCatConfig {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: UUID;
 
   @Column()
   category: string;

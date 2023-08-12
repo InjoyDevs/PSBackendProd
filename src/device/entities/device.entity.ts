@@ -8,10 +8,11 @@ import {
 } from 'typeorm';
 import { SysCatConfig } from './SysCatConfig.entity';
 import { AdvsMvPartsLink } from './advsMvPartsLink.entity';
+import { UUID } from 'typeorm/driver/mongodb/bson.typings';
 @Entity()
 export class Device {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: UUID;
 
   @Column({ type: 'text' })
   device_id: string;
@@ -20,28 +21,28 @@ export class Device {
   name: string;
 
   @Column({ type: 'int' })
-  is_in_service: number;
+  is_in_service: UUID;
 
   @Column({ type: 'bigint' })
-  template_id: number;
+  template_id: UUID;
 
   @Column({ type: 'int' })
-  version: number;
+  version: UUID;
 
   @Column({ type: 'int' })
-  level: number;
+  level: UUID;
 
   @Column({ type: 'int' })
-  device_type: number;
+  device_type: UUID;
 
   @Column({ type: 'int' })
-  created_by: number;
+  created_by: UUID;
 
   @Column({ type: 'int' })
-  modified_by: number;
+  modified_by: UUID;
 
   @Column({ type: 'text', nullable: true })
-  deleted_at: string | null;
+  deleted_at: string;
 
   @Column({ type: 'text' })
   created_at: string;
@@ -62,16 +63,16 @@ export class Device {
   digitalSignature: string;
 
   @Column({ type: 'int' })
-  inventoryLevel: number;
+  inventoryLevel: UUID;
 
   @Column({ type: 'int' })
-  capacity: number;
+  capacity: UUID;
 
   @Column({ type: 'text', nullable: true })
   inventory: any;
 
   @Column({ type: 'int' })
-  inventoryId: number;
+  inventoryId: UUID;
 
   @Column({
     type: 'text', // Store spatial data as text
@@ -80,7 +81,7 @@ export class Device {
   current_location: string;
 
   @Column({ type: 'int' })
-  security_alert_level: number;
+  security_alert_level: UUID;
 
   @ManyToOne(() => SysCatConfig, (sysCatConfig) => sysCatConfig.id)
   @JoinColumn({ name: 'device_type', referencedColumnName: 'id' })
