@@ -8,11 +8,23 @@ import {
 } from 'typeorm';
 import { SysCatConfig } from './SysCatConfig.entity';
 import { AdvsMvPartsLink } from './advsMvPartsLink.entity';
-import { UUID } from 'typeorm/driver/mongodb/bson.typings';
+
+enum DeviceLevel {
+  LEVEL_1 = 'Level 1',
+  LEVEL_2 = 'Level 2',
+  // Add more levels as needed
+}
+
+enum DeviceType {
+  TYPE_1 = 'Type 1',
+  TYPE_2 = 'Type 2',
+  // Add more types as needed
+}
+
 @Entity()
 export class Device {
-  @PrimaryGeneratedColumn()
-  id: UUID;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'text' })
   device_id: string;
@@ -20,26 +32,34 @@ export class Device {
   @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'int' })
-  is_in_service: UUID;
+  @Column({ type: 'boolean' })
+  is_in_service: boolean;
 
   @Column({ type: 'bigint' })
-  template_id: UUID;
+  template_id: string;
 
-  @Column({ type: 'int' })
-  version: UUID;
+  @Column({ type: 'uuid' })
+  version: string;
 
-  @Column({ type: 'int' })
-  level: UUID;
+  @Column({
+    type: 'enum',
+    enum: DeviceLevel,
+    default: DeviceLevel.LEVEL_1,
+  })
+  level: DeviceLevel;
 
-  @Column({ type: 'int' })
-  device_type: UUID;
+  @Column({
+    type: 'enum',
+    enum: DeviceType,
+    default: DeviceType.TYPE_1,
+  })
+  device_type: DeviceType;
 
-  @Column({ type: 'int' })
-  created_by: UUID;
+  @Column({ type: 'uuid' })
+  created_by: string;
 
-  @Column({ type: 'int' })
-  modified_by: UUID;
+  @Column({ type: 'uuid' })
+  modified_by: string;
 
   @Column({ type: 'text', nullable: true })
   deleted_at: string;
@@ -62,26 +82,26 @@ export class Device {
   @Column({ type: 'text' })
   digitalSignature: string;
 
-  @Column({ type: 'int' })
-  inventoryLevel: UUID;
+  @Column({ type: 'uuid' })
+  inventoryLevel: string;
 
-  @Column({ type: 'int' })
-  capacity: UUID;
+  @Column({ type: 'uuid' })
+  capacity: string;
 
   @Column({ type: 'text', nullable: true })
   inventory: any;
 
-  @Column({ type: 'int' })
-  inventoryId: UUID;
+  @Column({ type: 'uuid' })
+  inventoryId: string;
 
   @Column({
-    type: 'text', // Store spatial data as text
+    type: 'text',
     nullable: true,
   })
   current_location: string;
 
-  @Column({ type: 'int' })
-  security_alert_level: UUID;
+  @Column({ type: 'uuid' })
+  security_alert_level: string;
 
   @ManyToOne(() => SysCatConfig, (sysCatConfig) => sysCatConfig.id)
   @JoinColumn({ name: 'device_type', referencedColumnName: 'id' })
