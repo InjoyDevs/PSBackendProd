@@ -9,7 +9,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { Recipe } from './entities/recipe.entity';
+import { IngrMgRecipeCatalogue } from './entities/recipe.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RecipeDTO } from './dto/recipe.dto';
 
@@ -31,7 +31,7 @@ export class RecipeController {
   @Put(':id')
   async updateRecipe(
     @Param('id') id: number,
-    @Body() recipeDto: Recipe,
+    @Body() recipeDto: IngrMgRecipeCatalogue,
   ): Promise<RecipeDTO> {
     return this.recipeService.updateRecipe(id, recipeDto);
   }
@@ -48,7 +48,9 @@ export class RecipeController {
     description: 'The recipe has been successfully created.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async createRecipe(@Body() recipeDto: Recipe): Promise<RecipeDTO> {
+  async createRecipe(
+    @Body() recipeDto: IngrMgRecipeCatalogue,
+  ): Promise<RecipeDTO> {
     return this.recipeService.createRecipe(recipeDto);
   }
 
@@ -62,7 +64,7 @@ export class RecipeController {
   async personalizeRecipe(
     @Param() id: number,
     @Body() personalizeRecipeDto: PersonalizeRecipeDto,
-  ): Promise<Recipe> {
+  ): Promise<IngrMgRecipeCatalogue> {
     return this.recipeService.personalizeRecipe(id, personalizeRecipeDto);
   }
 
