@@ -5,44 +5,32 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { AdvsMtIngrTankLinking } from './advs_mt_ingr_tank_linking.entity';
 
-@Entity('ingr_mg_ingredients')
-export class IngrMgIngredients {
+@Entity('ingr_mv_oi_dock_pump_linking')
+export class IngrMvOiDockPumpLinking {
   @PrimaryGeneratedColumn('increment') id!: number;
 
   @Column()
-  ing_id!: string;
+  temp_nozzle_pump_id!: number;
 
   @Column()
-  name!: string;
+  dock_point_id!: number;
 
   @Column()
-  ref_value!: number;
+  tank_ing_mapping_id!: number;
 
   @Column()
-  price_per_ml!: number;
+  pump_id!: number;
 
   @Column()
-  category!: number;
+  pump_index!: number;
 
   @Column()
-  sub_category!: number;
-
-  @Column()
-  unit_of_ingredient!: string;
-
-  @Column()
-  can_be_pumped!: boolean;
-
-  @Column()
-  is_raw_material!: boolean;
-
-  @Column()
-  created_by!: number;
-
-  @Column()
-  modified_by!: number;
+  nozzle_index!: number;
 
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
   deleted_at?: Date;
@@ -52,4 +40,8 @@ export class IngrMgIngredients {
 
   @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updated_at!: Date;
+
+  @ManyToOne(() => AdvsMtIngrTankLinking)
+  @JoinColumn({ name: 'tank_ing_mapping_id', referencedColumnName: 'id' })
+  tank_linking!: AdvsMtIngrTankLinking;
 }
