@@ -2,13 +2,12 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('advs_mv_parts_link')
 export class AdvsMvPartsLink {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment') id: string;
 
-  @Column('uuid')
+  @Column()
   device_id: string;
 
-  @Column('uuid')
+  @Column()
   part_id: string;
 
   @Column({
@@ -18,10 +17,10 @@ export class AdvsMvPartsLink {
   })
   induction_date: string;
 
-  @Column('uuid')
+  @Column()
   created_by: string;
 
-  @Column('uuid')
+  @Column()
   modified_by: string;
 
   @Column({
