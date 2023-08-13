@@ -6,8 +6,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { SysCatConfig } from './SysCatConfig.entity';
-import { AdvsMvPartsLink } from './advsMvPartsLink.entity';
+import { SysCatConfig } from './sys_cat_config.entity';
+import { AdvsMvPartsLink } from './part/advsMvPartsLink.entity';
 
 enum DeviceLevel {
   LEVEL_1 = 'Level 1',
@@ -21,10 +21,9 @@ enum DeviceType {
   // Add more types as needed
 }
 
-@Entity()
-export class Device {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+@Entity('advs_mg_devices')
+export class AdvsMgDevices {
+  @PrimaryGeneratedColumn('increment') id: number;
 
   @Column({ type: 'text' })
   device_id: string;
@@ -38,37 +37,13 @@ export class Device {
   @Column({ type: 'bigint' })
   template_id: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'int' })
   version: string;
 
   @Column({
-    type: 'enum',
-    enum: DeviceLevel,
-    default: DeviceLevel.LEVEL_1,
+    type: 'int',
   })
-  level: DeviceLevel;
-
-  @Column({
-    type: 'enum',
-    enum: DeviceType,
-    default: DeviceType.TYPE_1,
-  })
-  device_type: DeviceType;
-
-  @Column({ type: 'uuid' })
-  created_by: string;
-
-  @Column({ type: 'uuid' })
-  modified_by: string;
-
-  @Column({ type: 'text', nullable: true })
-  deleted_at: string;
-
-  @Column({ type: 'text' })
-  created_at: string;
-
-  @Column({ type: 'text' })
-  updated_at: string;
+  level: number;
 
   @Column({ type: 'text' })
   location: string;
@@ -82,16 +57,16 @@ export class Device {
   @Column({ type: 'text' })
   digitalSignature: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'int' })
   inventoryLevel: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'int' })
   capacity: string;
 
   @Column({ type: 'text', nullable: true })
   inventory: any;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'int' })
   inventoryId: string;
 
   @Column({
@@ -100,12 +75,26 @@ export class Device {
   })
   current_location: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'int' })
   security_alert_level: string;
 
   @ManyToOne(() => SysCatConfig, (sysCatConfig) => sysCatConfig.id)
   @JoinColumn({ name: 'device_type', referencedColumnName: 'id' })
   sysCatConfig: SysCatConfig;
+  @Column({ type: 'int' })
+  created_by: string;
+
+  @Column({ type: 'int' })
+  modified_by: string;
+
+  @Column({ type: 'datetime', nullable: true })
+  deleted_at: string;
+
+  @Column({ type: 'datetime' })
+  created_at: string;
+
+  @Column({ type: 'datetime' })
+  updated_at: string;
 
   @OneToMany(
     () => AdvsMvPartsLink,
