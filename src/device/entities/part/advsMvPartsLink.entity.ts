@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('advs_mv_parts_link')
 export class AdvsMvPartsLink {
-  @PrimaryGeneratedColumn('increment') id: string;
+  @PrimaryGeneratedColumn('increment') id: number;
 
   @Column()
   device_id: string;
@@ -22,13 +22,6 @@ export class AdvsMvPartsLink {
 
   @Column()
   modified_by: string;
-
-  @Column({
-    type: 'datetime', // Change type to 'datetime'
-    default: () => 'CURRENT_TIMESTAMP',
-    nullable: false,
-  })
-  deleted_at: string;
 
   @Column({
     type: 'datetime', // Change type to 'datetime'

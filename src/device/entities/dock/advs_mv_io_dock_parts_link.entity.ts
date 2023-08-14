@@ -25,6 +25,5 @@ export class AdvsMvIoDockPartsLink {
 
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
   deleted_at?: Date;
-
   // You can add relationships here if needed
 }

@@ -1,36 +1,35 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  DeleteDateColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
 } from 'typeorm';
 
-@Entity('aprt_mv_pump_drive_properties')
-export class AprtMvPumpDriveProperties {
-  @PrimaryGeneratedColumn('increment') id!: number;
+import { IngrMgIngredients } from 'src/ingredient/entities/ingredient.entity';
+
+@Entity()
+export class InvtTdIngredientBatch {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column()
-  part_code!: number;
+  batch_id: string;
+
+  @Column({ type: 'int' })
+  ingredient_id!: number;
 
   @Column()
-  voltage!: number;
+  batch_type: string;
 
   @Column()
-  pwm_speed!: number;
-
-  @Column({ type: 'varchar', length: 255 })
-  rotate_or_pulse!: string;
+  qty: number;
 
   @Column()
-  volume_ml!: number;
-
-  @Column()
-  created_by!: number;
-
-  @Column()
-  modified_by!: number;
+  expiry_date!: string;
 
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
   deleted_at?: Date;

@@ -7,6 +7,7 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 
 import { RecipeCancupConfig } from 'src/recipe/entities/recipe_can_cup_config.entity';
@@ -63,8 +64,8 @@ export class IngrMgRecipeCatalogue {
   @Column()
   modified_by!: number;
 
-  @Column()
-  deleted_at!: string;
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
 
   @CreateDateColumn({
     type: 'datetime',

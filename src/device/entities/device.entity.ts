@@ -9,17 +9,6 @@ import {
 import { SysCatConfig } from './sys_cat_config.entity';
 import { AdvsMvPartsLink } from './part/advsMvPartsLink.entity';
 
-// enum DeviceLevel {
-//   LEVEL_1 = 'Level 1',
-//   LEVEL_2 = 'Level 2',
-//   // Add more levels as needed
-// }
-
-// enum DeviceType {
-//   TYPE_1 = 'Type 1',
-//   TYPE_2 = 'Type 2',
-//   // Add more types as needed
-// }
 
 @Entity('advs_mg_devices')
 export class AdvsMgDevices {

@@ -26,8 +26,8 @@ export class AprtMvPartDigitalSignature {
   @Column()
   modified_by!: number;
 
-  @DeleteDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  deleted_at!: Date;
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
 
   @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at!: Date;

@@ -34,7 +34,7 @@ export class AprtMvPumpProperties {
   modified_by: number;
 
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
-  deleted_at: Date;
+  deleted_at?: Date;
 
   @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

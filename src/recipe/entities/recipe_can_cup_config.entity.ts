@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { CartMgCancupSizeConfig } from './cart_mg_cancup_size_config.entity';
 
@@ -33,8 +34,8 @@ export class RecipeCancupConfig {
   })
   updated_at!: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  deleted_at!: Date;
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
 
   @ManyToOne(
     () => CartMgCancupSizeConfig,

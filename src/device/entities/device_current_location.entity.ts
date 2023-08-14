@@ -27,5 +27,5 @@ export class DeviceCurrentLocation {
   updated_at: Date;
 
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
-  deleted_at: Date;
+  deleted_at?: Date;
 }

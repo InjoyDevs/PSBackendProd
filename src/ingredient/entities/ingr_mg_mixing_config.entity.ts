@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { IngrMgIngredients } from './ingredient.entity'; // Replace with the actual import path
 
@@ -28,8 +29,8 @@ export class IngrMgMixingConfig {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column({ nullable: true })
-  deleted_at: Date;
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
 
   @OneToMany(
     () => IngrMgIngredients,

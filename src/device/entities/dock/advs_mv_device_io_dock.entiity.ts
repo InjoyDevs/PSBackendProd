@@ -27,13 +27,13 @@ export class AdvsMvDeviceIoDock {
   @Column()
   process_interface_type!: number;
 
-  @DeleteDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  deleted_at!: Date;
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
 
   @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at!: Date;
 
-  @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ type: 'datetime' })
   updated_at!: Date;
 
   @ManyToMany(

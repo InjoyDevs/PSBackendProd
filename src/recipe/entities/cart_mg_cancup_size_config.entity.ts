@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 
 @Entity('cart_mg_cancup_size_config')
@@ -44,9 +45,8 @@ export class CartMgCancupSizeConfig {
     nullable: false,
   })
   updated_at!: Date;
-
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  deleted_at!: Date;
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
   //maked this using number only , did'nt include the relationship
   @Column({ name: 'created_by', type: 'int' })
   createdByUser!: number;
