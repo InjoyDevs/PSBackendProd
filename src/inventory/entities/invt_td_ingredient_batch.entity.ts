@@ -2,16 +2,12 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
   DeleteDateColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { IngrMgIngredients } from 'src/ingredient/entities/ingredient.entity';
-
-@Entity()
+@Entity('invt_td_ingredient_batch')
 export class InvtTdIngredientBatch {
   @PrimaryGeneratedColumn('increment')
   id: number;

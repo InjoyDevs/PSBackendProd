@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  DeleteDateColumn,
 } from 'typeorm';
 import { CartMgCancupSizeConfig } from './cart_mg_cancup_size_config.entity';
 

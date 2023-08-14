@@ -9,7 +9,6 @@ import {
 import { SysCatConfig } from './sys_cat_config.entity';
 import { AdvsMvPartsLink } from './part/advsMvPartsLink.entity';
 
-
 @Entity('advs_mg_devices')
 export class AdvsMgDevices {
   @PrimaryGeneratedColumn('increment') id: number;
