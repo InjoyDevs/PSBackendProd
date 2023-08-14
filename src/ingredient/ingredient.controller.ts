@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
-import { Ingredient } from './entities/ingredient.entity';
+import { IngrMgIngredients as Ingredient } from './entities/ingredient.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('ingredients')

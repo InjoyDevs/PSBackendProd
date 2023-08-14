@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Recipe } from './entities/recipe.entity';
+import { IngrMgRecipeCatalogue } from './entities/recipe.entity';
 import { PersonalizeRecipeDto } from './dto/personalize-recipe.dto';
 
 import { RecipeDTO } from './dto/recipe.dto';
@@ -11,8 +11,8 @@ import { InventoryService } from 'src/inventory/inventory.service';
 export class RecipeService {
   [x: string]: any;
   constructor(
-    @InjectRepository(Recipe)
-    private recipeRepository: Repository<Recipe>,
+    @InjectRepository(IngrMgRecipeCatalogue)
+    private recipeRepository: Repository<IngrMgRecipeCatalogue>,
     private inventoryService: InventoryService,
   ) {}
 
@@ -32,13 +32,16 @@ export class RecipeService {
   }
 
   // for creating the recipe
-  async createRecipe(recipeDto: Recipe): Promise<RecipeDTO> {
+  async createRecipe(recipeDto: IngrMgRecipeCatalogue): Promise<RecipeDTO> {
     const newRecipe = await this.recipeRepository.save(recipeDto);
     return this.mapToRecipeDto(newRecipe);
   }
 
   // to update the recipe
-  async updateRecipe(id: number, recipeDto: Recipe): Promise<RecipeDTO> {
+  async updateRecipe(
+    id: number,
+    recipeDto: IngrMgRecipeCatalogue,
+  ): Promise<RecipeDTO> {
     await this.recipeRepository.update(id, recipeDto);
     return this.getRecipeById(id);
   }
@@ -52,7 +55,7 @@ export class RecipeService {
     recipeId: number,
     /* eslint-disable */
     personalizeRecipeDto: PersonalizeRecipeDto,
-  ): Promise<Recipe> {
+  ): Promise<IngrMgRecipeCatalogue> {
     const findRecipe = await this.recipeRepository.findOne({
       where: { id: recipeId },
     });

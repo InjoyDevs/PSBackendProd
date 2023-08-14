@@ -7,36 +7,18 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity('ingr_mg_ingredients')
-export class IngrMgIngredients {
+@Entity('aprt_mv_part_digital_id')
+export class AprtMvPartDigitalId {
   @PrimaryGeneratedColumn('increment') id!: number;
 
   @Column()
-  ing_id!: string;
+  part_id!: number;
 
   @Column()
-  name!: string;
+  id_type!: number;
 
-  @Column()
-  ref_value!: number;
-
-  @Column()
-  price_per_ml!: number;
-
-  @Column()
-  category!: number;
-
-  @Column()
-  sub_category!: number;
-
-  @Column()
-  unit_of_ingredient!: string;
-
-  @Column()
-  can_be_pumped!: boolean;
-
-  @Column()
-  is_raw_material!: boolean;
+  @Column({ type: 'varchar', length: 255 })
+  id_value!: string;
 
   @Column()
   created_by!: number;

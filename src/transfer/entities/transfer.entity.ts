@@ -2,8 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Transfer {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('increment') id: number;
 
   @Column({ type: 'int' })
   sourceDeviceId: number;

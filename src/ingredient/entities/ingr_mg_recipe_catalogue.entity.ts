@@ -4,14 +4,15 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
   ManyToOne,
   OneToMany,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
-import { RangeServiceTypeConfig } from './range_service_type_config.entity'; // Replace with the actual import path
-import { RecipeCancupConfig } from './recipe_can_cup_config.entity'; // Replace with the actual import path
-import { SysCatConfig } from 'src/device/entities/sys_cat_config.entity'; // Replace with the actual import path
+
+import { RecipeCancupConfig } from 'src/recipe/entities/recipe_can_cup_config.entity';
+import { RangeServiceTypeConfig } from 'src/recipe/entities/range_service_type_config.entity';
+import { SysCatConfig } from 'src/device/entities/sys_cat_config.entity';
 
 @Entity('ingr_mg_recipe_catalogue')
 export class IngrMgRecipeCatalogue {
@@ -35,7 +36,11 @@ export class IngrMgRecipeCatalogue {
   @Column()
   recipe_type!: number;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+  })
   published!: Date;
 
   @Column()
@@ -62,32 +67,42 @@ export class IngrMgRecipeCatalogue {
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
   deleted_at?: Date;
 
-  @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+  })
   created_at!: Date;
 
-  @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+  })
   updated_at!: Date;
 
+  // added a number instead of a relationship
   @Column({ name: 'created_by', type: 'integer' })
   createdByUser!: number;
+
+  // added a number instead of a relationship
   @Column({ name: 'modified_by', type: 'integer' })
   modifiedByUser!: number;
 
-  @ManyToOne(() => SysCatConfig)
-  @JoinColumn({ name: 'recipe_type', referencedColumnName: 'id' })
+  @ManyToOne(() => SysCatConfig, (sysCatConfig) => sysCatConfig.id)
+  @JoinColumn({ name: 'recipe_type' })
   recipeType!: SysCatConfig;
 
   @OneToMany(
     () => RecipeCancupConfig,
     (recipeCancupConfig) => recipeCancupConfig.id,
   )
-  @JoinColumn({ name: 'recipe_type', referencedColumnName: 'id' })
   recipeCancupConfigs!: RecipeCancupConfig[];
 
   @ManyToOne(
     () => RangeServiceTypeConfig,
     (rangeServiceTypeConfig) => rangeServiceTypeConfig.product_type,
   )
-  @JoinColumn({ name: 'product_type', referencedColumnName: 'product_type' })
-  productServiceType!: RangeServiceTypeConfig;
+  @JoinColumn({ name: 'product_type' })
+  productType!: RangeServiceTypeConfig;
 }

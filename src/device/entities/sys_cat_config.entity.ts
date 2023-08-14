@@ -2,8 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('sys_cat_config_n_values')
 export class SysCatConfig {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('increment') id: number;
 
   @Column()
   category: string;

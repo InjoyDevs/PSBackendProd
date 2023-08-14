@@ -34,8 +34,7 @@ In NestJS Boilerplate uses [TypeORM](https://www.npmjs.com/package/typeorm) and 
 
    @Entity()
    export class Post extends EntityHelper {
-     @PrimaryGeneratedColumn()
-     id: number;
+     @PrimaryGeneratedColumn('increment') id: number;
 
      @Column()
      title: string;

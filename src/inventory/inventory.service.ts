@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
-import { Device } from 'src/device/entities/device.entity';
+import { AdvsMgDevices } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class InventoryService {
   constructor(
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
-    @InjectRepository(Device)
-    private deviceRepository: Repository<Device>,
+    @InjectRepository(AdvsMgDevices)
+    private deviceRepository: Repository<AdvsMgDevices>,
   ) {}
 
   async createInventory(inventory: Inventory): Promise<Inventory> {

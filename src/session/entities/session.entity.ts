@@ -11,8 +11,7 @@ import { EntityHelper } from 'src/utils/entity-helper';
 
 @Entity()
 export class Session extends EntityHelper {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('increment') id: number;
 
   @ManyToOne(() => User, {
     eager: true,

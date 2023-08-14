@@ -2,14 +2,13 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('advs_mv_parts_link')
 export class AdvsMvPartsLink {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('increment') id: number;
 
   @Column()
-  device_id: number;
+  device_id: string;
 
   @Column()
-  part_id: number;
+  part_id: string;
 
   @Column({
     type: 'datetime', // Change type to 'datetime'
@@ -19,17 +18,10 @@ export class AdvsMvPartsLink {
   induction_date: string;
 
   @Column()
-  created_by: number;
+  created_by: string;
 
   @Column()
-  modified_by: number;
-
-  @Column({
-    type: 'datetime', // Change type to 'datetime'
-    default: () => 'CURRENT_TIMESTAMP',
-    nullable: false,
-  })
-  deleted_at: string;
+  modified_by: string;
 
   @Column({
     type: 'datetime', // Change type to 'datetime'
