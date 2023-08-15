@@ -26,10 +26,10 @@ export class InvtTdTransactTransfer {
   @Column({ type: 'varchar', length: 255 })
   mode!: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   created_at!: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updated_at!: string;
 
   @OneToMany(() => InvtTdTransactTransferDetail, (detail) => detail.transfer_id)
