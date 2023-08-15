@@ -26,12 +26,6 @@ export class CartMgCancupSizeConfig {
   @Column()
   price!: number;
 
-  @Column()
-  created_by!: number;
-
-  @Column()
-  modified_by!: number;
-
   @CreateDateColumn({
     type: 'datetime',
     default: () => 'CURRENT_TIMESTAMP',

@@ -58,12 +58,6 @@ export class IngrMgRecipeCatalogue {
   @Column()
   base_price!: number;
 
-  @Column()
-  created_by!: number;
-
-  @Column()
-  modified_by!: number;
-
   @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
   deleted_at?: Date;
 
