@@ -20,7 +20,7 @@ export class AprtMgPartDigitalId {
   @Column({ type: 'varchar', length: 255 })
   sr_no!: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   part_spec_details!: string;
 
   @Column({ type: 'double precision' })
