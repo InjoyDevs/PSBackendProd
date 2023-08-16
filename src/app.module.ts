@@ -18,6 +18,7 @@ import { OrderModule } from './order/order.module';
 import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
 import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
+import { SECONDARY_DATABASE } from './config/contants';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-conf
       },
     }),
     TypeOrmModule.forRootAsync({
-      name: 'secondaryDatabase',
+      name: SECONDARY_DATABASE,
       useClass: SecondaryTypeOrmConfigService,
       dataSourceFactory: async (options: DataSourceOptions) => {
         return new DataSource(options).initialize();
