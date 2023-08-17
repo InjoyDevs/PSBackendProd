@@ -15,7 +15,7 @@ export class SysCatConfig {
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: string;
+  created_at?: string;
 
   @Column({
     type: 'datetime', // Change type to 'datetime'

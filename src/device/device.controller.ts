@@ -32,4 +32,15 @@ export class DeviceController {
   async proprietaryServiceUpdateDevice(@Param() id: number) {
     return this.deviceService.proprietaryServiceUpdateDevice(id);
   }
+
+  @Put('initialize-devies')
+  @ApiOperation({ summary: 'Initialize all devices' })
+  @ApiResponse({
+    status: 200,
+    description: 'All devices have been successfully initialized',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async initializeDevices() {
+    return await this.deviceService.initializeDevices();
+  }
 }

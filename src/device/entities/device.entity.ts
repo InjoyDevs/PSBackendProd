@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { SysCatConfig } from './sys_cat_config.entity';
-import { AdvsMvPartsLink } from './part/advsMvPartsLink.entity';
+import { AdvsMvPartsLink } from './part/advs_mv_parts_link.entity';
 
 @Entity('advs_mg_devices')
 export class AdvsMgDevices {
@@ -33,38 +33,11 @@ export class AdvsMgDevices {
   })
   level: number;
 
-  @Column({ type: 'text' })
-  location: string;
-
-  @Column({ type: 'json' })
-  pumpData: object;
-
-  @Column({ type: 'json' })
-  dockDetails: object;
-
-  @Column({ type: 'text' })
-  digitalSignature: string;
-
-  @Column({ type: 'int' })
-  inventoryLevel: string;
-
-  @Column({ type: 'int' })
-  capacity: string;
-
-  @Column({ type: 'text', nullable: true })
-  inventory: any;
-
-  @Column({ type: 'int' })
-  inventoryId: string;
-
   @Column({
     type: 'text',
     nullable: true,
   })
   current_location: string;
-
-  @Column({ type: 'int' })
-  security_alert_level: string;
 
   @ManyToOne(() => SysCatConfig, (sysCatConfig) => sysCatConfig.id)
   @JoinColumn({ name: 'device_type', referencedColumnName: 'id' })
