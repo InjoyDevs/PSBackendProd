@@ -9,20 +9,20 @@ export class SecondaryTypeOrmConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: this.configService.get('secondary_database.type', { infer: true }),
-      url: this.configService.get('secondary_database.url', { infer: true }),
-      host: this.configService.get('secondary_database.host', { infer: true }),
-      port: this.configService.get('secondary_database.port', { infer: true }),
-      username: this.configService.get('secondary_database.username', {
+      type: this.configService.get('SECONDARYDATABASE.type', { infer: true }),
+      url: this.configService.get('SECONDARYDATABASE.url', { infer: true }),
+      host: this.configService.get('SECONDARYDATABASE.host', { infer: true }),
+      port: this.configService.get('SECONDARYDATABASE.port', { infer: true }),
+      username: this.configService.get('SECONDARYDATABASE.username', {
         infer: true,
       }),
-      password: this.configService.get('secondary_database.password', {
+      password: this.configService.get('SECONDARYDATABASE.password', {
         infer: true,
       }),
-      database: this.configService.get('secondary_database.name', {
+      database: this.configService.get('SECONDARYDATABASE.name', {
         infer: true,
       }),
-      synchronize: this.configService.get('secondary_database.synchronize', {
+      synchronize: this.configService.get('SECONDARYDATABASE.synchronize', {
         infer: true,
       }),
       dropSchema: false,

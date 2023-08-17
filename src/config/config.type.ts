@@ -89,5 +89,5 @@ export type AllConfigType = {
   google: GoogleConfig;
   mail: MailConfig;
   twitter: TwitterConfig;
-  secondary_database: SecondaryDatabaseConfig;
+  SECONDARYDATABASE: SecondaryDatabaseConfig;
 };

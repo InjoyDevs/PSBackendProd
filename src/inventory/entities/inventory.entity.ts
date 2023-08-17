@@ -1,4 +1,4 @@
-import { Device } from 'src/device/entities/device.entity';
+import { AdvsMgDevices } from 'src/device/entities/device.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,10 +9,9 @@ import {
 
 @Entity()
 export class Inventory {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('increment') id: number;
 
-  @OneToOne(() => Device)
+  @OneToOne(() => AdvsMgDevices)
   @JoinColumn()
   deviceId: number;
 

@@ -1,27 +1,55 @@
-// src/ingredients/ingredient.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
-import { Recipe } from 'src/recipe/entities/recipe.entity';
 
-@Entity()
-export class Ingredient {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity('ingr_mg_ingredients')
+export class IngrMgIngredients {
+  @PrimaryGeneratedColumn('increment') id!: number;
 
   @Column()
-  name: string;
+  ing_id!: string;
 
   @Column()
-  quantity: number;
+  name!: string;
 
-  @ManyToOne(() => Recipe, (recipe) => recipe.ingredients, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'recipe_id' })
-  recipe: Recipe;
+  @Column()
+  ref_value!: number;
+
+  @Column()
+  price_per_ml!: number;
+
+  @Column()
+  category!: number;
+
+  @Column()
+  sub_category!: number;
+
+  @Column()
+  unit_of_ingredient!: string;
+
+  @Column()
+  can_be_pumped!: boolean;
+
+  @Column()
+  is_raw_material!: boolean;
+
+  @Column()
+  created_by!: number;
+
+  @Column()
+  modified_by!: number;
+
+  @DeleteDateColumn({ type: 'datetime', default: null, nullable: true })
+  deleted_at?: Date;
+
+  @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  created_at!: Date;
+
+  @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  updated_at!: Date;
 }

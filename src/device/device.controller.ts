@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Put, Param } from '@nestjs/common';
 import { DeviceService } from './device.service';
-import { Device } from './entities/device.entity';
+import { AdvsMgDevices } from './entities/device.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('devices')
@@ -15,7 +15,9 @@ export class DeviceController {
     description: 'The device has been successfully registered.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async registerNewDevice(@Body() device: Device): Promise<Device> {
+  async registerNewDevice(
+    @Body() device: AdvsMgDevices,
+  ): Promise<AdvsMgDevices> {
     return this.deviceService.registerNewDevice(device);
   }
 
@@ -29,5 +31,16 @@ export class DeviceController {
   @ApiResponse({ status: 404, description: 'Device not found' })
   async proprietaryServiceUpdateDevice(@Param() id: number) {
     return this.deviceService.proprietaryServiceUpdateDevice(id);
+  }
+
+  @Put('initialize-devies')
+  @ApiOperation({ summary: 'Initialize all devices' })
+  @ApiResponse({
+    status: 200,
+    description: 'All devices have been successfully initialized',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async initializeDevices() {
+    return await this.deviceService.initializeDevices();
   }
 }

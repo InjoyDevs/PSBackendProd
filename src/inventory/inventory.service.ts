@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
-import { Device } from 'src/device/entities/device.entity';
+import { AdvsMgDevices } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class InventoryService {
   constructor(
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
-    @InjectRepository(Device)
-    private deviceRepository: Repository<Device>,
+    @InjectRepository(AdvsMgDevices)
+    private deviceRepository: Repository<AdvsMgDevices>,
   ) {}
 
   async createInventory(inventory: Inventory): Promise<Inventory> {
@@ -69,6 +69,14 @@ export class InventoryService {
     let currentLevel = inventoryData.currentVolume;
     // Manipulate it randomly
     currentLevel += Math.random() * 10 - 7;
+
+    // TODO:
+    // Hub and despenser Policy will be different
+    // hub actuall no issue we need actual level
+    // only need dispenser
+    // update its policy it
+    // micro-liter drops
+
     // Bound check
     currentLevel = Math.max(0, Math.min(currentLevel, inventoryData.capacity));
     // console.log(currentLevel);
@@ -101,11 +109,18 @@ export class InventoryService {
 
   // -----------------alter level -----------------------------
 
+  // TODO:
+  // require rights for api call for
+  // dispenser has right for all
+
   async alterLevel(inventoryId: number, change: number, isPositive: boolean) {
     // Fetch inventory entity by ID
     const inventory = await this.inventoryRepository.findOne({
       where: { id: inventoryId },
     });
+
+    //  TODO:
+    //  it should update alter level and set level in the main server
 
     // Throw error if inventory not found
     if (!inventory) {

@@ -1,7 +1,13 @@
 import { Controller, Post, Body, Param, Get, Put } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { Inventory } from './entities/inventory.entity';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  ApiBody,
+} from '@nestjs/swagger';
 import {
   InventoryLevelChangeDto,
   InventoryPropertyDto,
@@ -55,6 +61,11 @@ export class InventoryController {
     name: 'id',
     description: 'Enter Inventory  Id',
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieve inventory level successfully',
+    type: Number, // Response type is a number in this case
+  })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async getLevel(@Param('id') id: number) {
     return await this.inventoryService.getLevel(id);
@@ -68,7 +79,12 @@ export class InventoryController {
   })
   @ApiParam({
     name: 'id',
-    description: 'Enter Inventory  Id',
+    description: 'Enter Inventory Id',
+    example: 1,
+  })
+  @ApiBody({
+    description: 'Request body to set inventory level within constraints',
+    type: SetInventoryDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async setLevel(
@@ -78,7 +94,7 @@ export class InventoryController {
     return await this.inventoryService.setLevel(id, setInventory.level);
   }
 
-  @Put(':id/level')
+  @Put('level/:id')
   @ApiOperation({ summary: 'Alter inventory level for a device' })
   @ApiResponse({
     status: 200,
@@ -87,6 +103,10 @@ export class InventoryController {
   @ApiParam({
     name: 'id',
     description: 'Enter Inventory  Id',
+  })
+  @ApiBody({
+    description: 'Request body to alter inventory level within constraints',
+    type: InventoryLevelChangeDto,
   })
   async alterLevel(
     @Param('id') inventoryId: number,
@@ -98,24 +118,6 @@ export class InventoryController {
       changeDto.isPositive,
     );
   }
-
-  // @Put('level/:id')
-  // @ApiOperation({ summary: 'Alter inventory level for a device' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Inventory level altered successfully',
-  // })
-  // @ApiParam({
-  //   name: 'id',
-  //   description: 'Enter Inventory  Id',
-  // })
-  // @ApiResponse({ status: 403, description: 'Forbidden.' })
-  // async alterLevel(
-  //   @Param('id') deviceId: number,
-  //   @Body('changeAmount') changeAmount: number,
-  // ) {
-  //   return await this.inventoryService.alterLevel(deviceId, changeAmount);
-  // }
 
   @Get('property')
   @ApiOperation({ summary: 'Get encrypted properties for all batches' })
