@@ -71,7 +71,7 @@ export class InventoryService {
     currentLevel += Math.random() * 10 - 7;
 
     // TODO:
-    // Hub and despenser Policy willl be different
+    // Hub and despenser Policy will be different
     // hub actuall no issue we need actual level
     // only need dispenser
     // update its policy it

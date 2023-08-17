@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IngrMgRecipeCatalogue } from 'src/recipe/entities/recipe.entity';
-
 export class TransferGetQtySetForRefillDto {
   @ApiProperty({ description: 'The ID of the hub' })
   hubId: number;
@@ -11,23 +9,6 @@ export class TransferGetQtySetForRefillDto {
 
   @ApiProperty({ description: 'The ID of the dispenser' })
   dispenserId: number;
-
-  @ApiProperty({
-    description: 'List of ingredient batch volume details',
-    type: [
-      {
-        ingredient: IngrMgRecipeCatalogue,
-        batch: {},
-        transferredVolume: Number,
-      },
-    ],
-    isArray: true,
-  })
-  ingredientBatchVolumeList: {
-    ingredient: IngrMgRecipeCatalogue;
-    batch: any;
-    transferredVolume: number;
-  }[];
 }
 
 export class TransferGetQtySetForRecipeDto {

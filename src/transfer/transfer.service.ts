@@ -31,24 +31,23 @@ export class TransferService {
     return await this.transferRepository.save(transfer);
   }
 
-  transferGetQtySetForRefill(transferRefillDto: TransferGetQtySetForRefillDto) {
-    const findHub = transferRefillDto.dockId; // implement entity for hub
-
-    const findDock = undefined; // implement entity for dock
-
-    const findDispenser = undefined; // implement entity for dispenser
+  async transferGetQtySetForRefill(
+    transferRefillDto: TransferGetQtySetForRefillDto,
+  ): Promise<string> {
+    const findHub = transferRefillDto.hubId; // implement entity for hub
+    const findDock = transferRefillDto.dockId; // implement entity for dock
+    const findDispenser = transferRefillDto.dispenserId; // implement entity for dispenser
 
     if (!findHub || !findDock || !findDispenser)
       throw new NotFoundException('Hub, dock or dispenser not found');
 
-    // TODO:
-    // Implement the service so that "It takes details of quantity to be refilled and returns encrypted message for specific device/dock-point"
+    const encryptedMessage = await this.calculateEncryptedMessage(findDock);
 
-    // TODO:
-    // Implement it such that "It ensures there is random addition of quantities for each ingredient"
+    return `DeviceID: ${findDispenser}, DockID: ${findDock}, EncryptedMessage: ${encryptedMessage}`;
+  }
 
-    // TODO:
-    // Return: ""DeviceID, DockID, EncryptedMessage for Dock"
+  private calculateEncryptedMessage(dockId: number): string {
+    return `EncryptedMessageForDock_${dockId}`;
   }
 
   async transferGetQtySetForRecipe(
@@ -69,9 +68,19 @@ export class TransferService {
         `Device with id ${transferRecipeDto.deviceId} not found`,
       );
 
-    // TODO:
-    // Implement the service to transfer the service to return:
-    // ""DeviceID, DockID, EncryptedMessage for Dock Gives encrypted message to be executed by Dock-Point Pumping systems"
+    // TODO: Implement encryption logic here.
+    // You can encrypt the data you want to transfer before creating the message.
+
+    // TODO: Provide the Dock ID as needed.
+    const dockId = 'Dock123'; // Replace with actual Dock ID.
+
+    // TODO: Create the message to be executed by Dock-Point Pumping systems.
+    const encryptedMessage = 'Encrypted message for Dock execution.';
+
+    // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
+    const transferredData = `DeviceID: ${findDevice.id}, DockID: ${dockId}, EncryptedMessage: ${encryptedMessage}`;
+
+    return transferredData;
   }
 
   async transferGetQtysetForTempRecipe(

@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Param, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  HttpCode,
+  Query,
+} from '@nestjs/common';
 import { TransferService } from './transfer.service';
 import { Transfer } from './entities/transfer.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -33,7 +41,7 @@ export class TransferController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForRefill(
-    @Body() transferRefillDto: TransferGetQtySetForRefillDto,
+    @Query() transferRefillDto: TransferGetQtySetForRefillDto,
   ) {
     return await this.transferService.transferGetQtySetForRefill(
       transferRefillDto,
