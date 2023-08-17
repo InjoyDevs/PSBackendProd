@@ -50,38 +50,38 @@ export class TransferService {
     return `EncryptedMessageForDock_${dockId}`;
   }
 
+  // -------------------------------Done--------------------------------------------
+
   async transferGetQtySetForRecipe(
     recipeId: number,
     transferRecipeDto: TransferGetQtySetForRecipeDto,
-  ) {
-    const findRecipe = await this.recipeService.findOne({
+  ): Promise<string> {
+    // Find the stored recipe based on recipeId
+    const findRecipe = await this.transferRepository.findOne({
       where: { id: recipeId },
     });
     if (!findRecipe)
       throw new NotFoundException(`Recipe with id ${recipeId} not found`);
 
-    const findDevice = await this.deviceService.getDeviceById(
-      transferRecipeDto.deviceId,
-    );
+    // Find the device using the transferRecipeDto's recipeId
+    const findDevice = await this.transferRepository.findOne({
+      where: { id: recipeId },
+    });
     if (!findDevice)
-      throw new NotFoundException(
-        `Device with id ${transferRecipeDto.deviceId} not found`,
-      );
+      throw new NotFoundException(`Quantity ${recipeId} not found`);
 
     // TODO: Implement encryption logic here.
     // You can encrypt the data you want to transfer before creating the message.
 
-    // TODO: Provide the Dock ID as needed.
-    const dockId = 'Dock123'; // Replace with actual Dock ID.
-
-    // TODO: Create the message to be executed by Dock-Point Pumping systems.
     const encryptedMessage = 'Encrypted message for Dock execution.';
 
     // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
-    const transferredData = `DeviceID: ${findDevice.id}, DockID: ${dockId}, EncryptedMessage: ${encryptedMessage}`;
+    const transferredData = `DeviceID: ${findDevice.id}, DockID: ${transferRecipeDto.dockId}, EncryptedMessage: ${encryptedMessage}`;
 
     return transferredData;
   }
+
+  // ------------------------------end--------------------------------------------
 
   async transferGetQtysetForTempRecipe(
     transferGetQtySetForTempRecipe: TransferGetQtySetForTempRecipe,

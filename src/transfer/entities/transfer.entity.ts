@@ -8,6 +8,9 @@ export class Transfer {
   sourceDeviceId: number;
 
   @Column({ type: 'int' })
+  recipeId: number;
+
+  @Column({ type: 'int' })
   hubId: number;
 
   @Column({ type: 'int' })

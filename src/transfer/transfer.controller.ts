@@ -55,11 +55,11 @@ export class TransferController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForRecipe(
-    @Param() id,
-    @Body() transferRecipeDto: TransferGetQtySetForRecipeDto,
+    @Param('id') recipeId: number, // Use @Param instead of @Query
+    @Query() transferRecipeDto: TransferGetQtySetForRecipeDto,
   ) {
     return await this.transferService.transferGetQtySetForRecipe(
-      id,
+      recipeId,
       transferRecipeDto,
     );
   }
