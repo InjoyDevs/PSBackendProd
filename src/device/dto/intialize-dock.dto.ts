@@ -1,3 +1,1 @@
-export class intializeDockDto {
-    
-}
+export class intializeDockDto {}
