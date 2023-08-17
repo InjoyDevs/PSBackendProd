@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Put, Param, Logger } from '@nestjs/common';
+import { Controller, Post, Body, Put, Param } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { AdvsMgDevices } from './entities/device.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -41,7 +41,6 @@ export class DeviceController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   async initializeDevices() {
-    Logger.log('initializeDevicesssssssssssssssssssssssssssssssss');
     return await this.deviceService.initializeDevices();
   }
 }

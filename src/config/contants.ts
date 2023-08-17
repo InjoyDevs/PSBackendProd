@@ -1,1 +1,1 @@
-export const SECONDARY_DATABASE = 'secondaryDatabase';
+export const SECONDARYDATABASE = 'secondaryDatabase';

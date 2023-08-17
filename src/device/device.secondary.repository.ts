@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { SECONDARY_DATABASE } from 'src/config/contants';
+import { SECONDARYDATABASE } from 'src/config/contants';
 import { DataSource } from 'typeorm';
 
 @Injectable()
 export class DeviceSecondaryRepository {
   constructor(
-    @InjectDataSource(SECONDARY_DATABASE)
+    @InjectDataSource(SECONDARYDATABASE)
     private secondaryDatasource: DataSource,
   ) {}
   getAllDevices() {

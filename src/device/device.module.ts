@@ -3,7 +3,7 @@ import { DeviceService } from './device.service';
 import { DeviceController } from './device.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdvsMgDevices } from './entities/device.entity';
-import { SECONDARY_DATABASE } from 'src/config/contants';
+import { SECONDARYDATABASE } from 'src/config/contants';
 import { DeviceSecondaryRepository } from './device.secondary.repository';
 import { SysCatConfig } from './entities/sys_cat_config.entity';
 import { AdvsMvPartsLink } from './entities/part/advs_mv_parts_link.entity';
@@ -29,7 +29,7 @@ import { DockPointNozzleTankIngMapping } from './entities/dock/dock_point_nozzle
       AdvsMvIoDockPartsLink,
       DockPointNozzleTankIngMapping,
     ]),
-    TypeOrmModule.forFeature([], SECONDARY_DATABASE),
+    TypeOrmModule.forFeature([], SECONDARYDATABASE),
   ],
   providers: [DeviceService, DeviceSecondaryRepository],
   controllers: [DeviceController],
