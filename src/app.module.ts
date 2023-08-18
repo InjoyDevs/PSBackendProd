@@ -19,12 +19,18 @@ import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
 import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
 import { SECONDARYDATABASE } from './config/contants';
+import encryptionConfig from './config/encryption.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, appConfig, secondaryDatabaseConfig],
+      load: [
+        databaseConfig,
+        appConfig,
+        secondaryDatabaseConfig,
+        encryptionConfig,
+      ],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({

@@ -8,11 +8,39 @@ import * as crypto from 'crypto';
 @Injectable()
 export class EncryptionService implements EncryptionInterface {
   constructor(private configService: ConfigService<AllConfigType>) {}
-  encryptData() {
-    throw new Error('Method not implemented.');
+
+  encryptData(data: string): string {
+    const publicKey = this.configService.getOrThrow(
+      'encryption.encryptionDatabasePublicKey',
+      {
+        infer: true,
+      },
+    );
+    const encrypedData = crypto.publicEncrypt(
+      {
+        key: publicKey,
+        padding: crypto.constants.RSA_PKCS1_PADDING,
+      },
+      Buffer.from(data),
+    );
+    return encrypedData.toString('base64');
   }
-  decrptData() {
-    throw new Error('Method not implemented.');
+
+  decrptData(data: string): string {
+    const privateKey = this.configService.getOrThrow(
+      'encryption.encryptionDatabasePrivateKey',
+      {
+        infer: true,
+      },
+    );
+    const decrptedData = crypto.privateDecrypt(
+      {
+        key: privateKey,
+        padding: crypto.constants.RSA_PKCS1_PADDING,
+      },
+      Buffer.from(data),
+    );
+    return decrptedData.toString('utf-8');
   }
   generateKeyPair(keyPair: KeyPair) {
     const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
