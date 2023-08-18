@@ -19,87 +19,12 @@ import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
 import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
 import { SECONDARYDATABASE } from './config/contants';
-import encryptionConfig from './config/encryption.config';
-import * as fs from 'fs';
-import * as crypto from 'crypto';
-import { LoggerModule } from 'nestjs-pino';
-
-export const setUpLoggerModule = () => {
-  if (process.env.NODE_ENV === 'production') {
-    return LoggerModule.forRoot({
-      pinoHttp: {
-        genReqId: () => crypto.randomUUID(),
-        timestamp: true,
-        level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
-        serializers: {
-          req: (req) => {
-            // Customize the request serializer to exclude unwanted headers
-            return {
-              method: req.method,
-              url: req.url,
-              // Exclude specific headers from being logged
-              headers: {
-                // Exclude 'authorization' header
-                ...req.headers,
-                authorization: undefined,
-                cookie: undefined,
-                cookies: undefined,
-                'X-Token': undefined,
-                'T-Token': undefined,
-              },
-              remoteAddress: req.remoteAddress,
-              remotePort: req.remotePort,
-            };
-          },
-        },
-        stream: fs.createWriteStream(`logs/app.log`, { flags: 'a' }),
-      },
-    });
-  } else {
-    return LoggerModule.forRoot({
-      pinoHttp: {
-        genReqId: () => crypto.randomUUID(),
-        level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
-        serializers: {
-          req: (req) => {
-            // Customize the request serializer to exclude unwanted headers
-            return {
-              method: req.method,
-              url: req.url,
-              // Exclude specific headers from being logged
-              headers: {
-                // Exclude 'authorization' header
-                ...req.headers,
-                authorization: undefined,
-                cookie: undefined,
-                cookies: undefined,
-                'X-Token': undefined,
-                'T-Token': undefined,
-              },
-              remoteAddress: req.remoteAddress,
-              remotePort: req.remotePort,
-            };
-          },
-        },
-        transport: {
-          target: 'pino-pretty',
-        },
-      },
-    });
-  }
-};
 
 @Module({
   imports: [
-    setUpLoggerModule(),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [
-        databaseConfig,
-        appConfig,
-        secondaryDatabaseConfig,
-        encryptionConfig,
-      ],
+      load: [databaseConfig, appConfig, secondaryDatabaseConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({

@@ -16,7 +16,6 @@ import {
 } from './dto/transfer.dto';
 
 import { DeviceService } from 'src/device/device.service';
-import { RecipeService } from 'src/recipe/recipe.service';
 
 @Injectable()
 export class TransferService {
