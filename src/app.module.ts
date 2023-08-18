@@ -19,6 +19,7 @@ import { PumpModule } from './pump/pump.module';
 import { TransferModule } from './transfer/transfer.module';
 import { SecondaryTypeOrmConfigService } from './database/secondary-typeorm-config.service';
 import { SECONDARYDATABASE } from './config/contants';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { SECONDARYDATABASE } from './config/contants';
     OrderModule,
     PumpModule,
     TransferModule,
+    BatchModule,
   ],
 })
 export class AppModule {}
