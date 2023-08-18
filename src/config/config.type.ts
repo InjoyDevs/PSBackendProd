@@ -79,6 +79,12 @@ export type TwitterConfig = {
   consumerSecret?: string;
 };
 
+export type EncryptionConfig = {
+  encryptionAlgorithm: string;
+  encryptionDatabasePublicKey: string;
+  encryptionDatabasePrivateKey: string;
+};
+
 export type AllConfigType = {
   app: AppConfig;
   apple: AppleConfig;
@@ -90,4 +96,5 @@ export type AllConfigType = {
   mail: MailConfig;
   twitter: TwitterConfig;
   SECONDARYDATABASE: SecondaryDatabaseConfig;
+  encryption: EncryptionConfig;
 };
