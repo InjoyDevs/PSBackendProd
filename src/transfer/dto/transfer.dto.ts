@@ -13,6 +13,9 @@ export class TransferGetQtySetForRefillDto {
 
 export class TransferGetQtySetForRecipeDto {
   @ApiProperty({ description: 'The ID of the Recipe' })
+  DeviceId: number;
+
+  @ApiProperty({ description: 'The ID of the Recipe' })
   recipeId: number;
 
   @ApiProperty({ description: 'The ID of the dock' })
