@@ -10,6 +10,8 @@ import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import validationOptions from './utils/validation-options';
 import { AllConfigType } from './config/config.type';
+import { NewrelicInterceptor } from './interceptors/newrelic.interceptors';
+import { LoggerErrorInterceptor } from 'nestjs-pino';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -28,6 +30,8 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.useGlobalInterceptors(new NewrelicInterceptor());
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
   const url = configService.getOrThrow('app.backendDomain', { infer: true });
 
   const options = new DocumentBuilder()
