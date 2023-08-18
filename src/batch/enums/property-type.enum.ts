@@ -4,5 +4,5 @@
 
 export enum PropertTypeEnum {
   DENSITY = 'DENSITY',
-  VISCOSITY = 'DENSITY',
+  VISCOSITY = 'VISCOSITY',
 }
