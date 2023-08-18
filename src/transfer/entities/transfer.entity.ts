@@ -8,7 +8,13 @@ export class Transfer {
   sourceDeviceId: number;
 
   @Column({ type: 'int' })
-  recipeId: number;
+  destinationDeviceId: number;
+
+  @Column({ type: 'int' })
+  ingredientId: number;
+
+  @Column({ type: 'float' })
+  transferredVolume: number;
 
   @Column({ type: 'int' })
   hubId: number;
@@ -20,11 +26,8 @@ export class Transfer {
   dispenserId: number;
 
   @Column({ type: 'int' })
-  destinationDeviceId: number;
+  recipeId: number;
 
   @Column({ type: 'int' })
-  ingredientId: number;
-
-  @Column({ type: 'float' })
-  transferredVolume: number;
+  deviceId: number;
 }

@@ -13,9 +13,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   TransferGetQtySetForRefillDto,
   TransferGetQtySetForRecipeDto,
-  TransferGetQtySetForTempRecipe,
   StartTransferDto,
   UpdateTransferDto,
+  // @typescript-eslint/no-unused-vars
+  TransferGetQtySetForTempRecipe,
 } from './dto/transfer.dto';
 
 @ApiTags('transfers')
@@ -71,10 +72,10 @@ export class TransferController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForTempRecipe(
-    @Body() transferTempRecipeDto: TransferGetQtySetForTempRecipe,
+    @Param() TransferGetQtySetForTempRecipe: TransferGetQtySetForTempRecipe,
   ) {
     return await this.transferService.transferGetQtysetForTempRecipe(
-      transferTempRecipeDto,
+      TransferGetQtySetForTempRecipe,
     );
   }
 
