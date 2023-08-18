@@ -1,4 +1,4 @@
 export class KeyPair {
-    deviceId: number;
-    dockId: number;
+  deviceId: number;
+  dockId: number;
 }

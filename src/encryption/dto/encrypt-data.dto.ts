@@ -1,5 +1,5 @@
-import { KeyPair } from "./key-pair.dto";
+import { KeyPair } from './key-pair.dto';
 
 export class EncryptData extends KeyPair {
-    data: any;
+  data: any;
 }
