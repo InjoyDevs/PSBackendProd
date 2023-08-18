@@ -1,21 +1,13 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  HttpCode,
-  Query,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, HttpCode } from '@nestjs/common';
 import { TransferService } from './transfer.service';
 import { Transfer } from './entities/transfer.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   TransferGetQtySetForRefillDto,
   TransferGetQtySetForRecipeDto,
-  TransferGetQtySetForTempRecipe,
   StartTransferDto,
   UpdateTransferDto,
+  TransferGetQtySetForTempRecipe, // eslint-disable-line
 } from './dto/transfer.dto';
 
 @ApiTags('transfers')
@@ -41,7 +33,7 @@ export class TransferController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForRefill(
-    @Query() transferRefillDto: TransferGetQtySetForRefillDto,
+    @Param() transferRefillDto: TransferGetQtySetForRefillDto,
   ) {
     return await this.transferService.transferGetQtySetForRefill(
       transferRefillDto,
@@ -56,7 +48,7 @@ export class TransferController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForRecipe(
     @Param('id') recipeId: number, // Use @Param instead of @Query
-    @Query() transferRecipeDto: TransferGetQtySetForRecipeDto,
+    @Param() transferRecipeDto: TransferGetQtySetForRecipeDto,
   ) {
     return await this.transferService.transferGetQtySetForRecipe(
       recipeId,
@@ -71,10 +63,10 @@ export class TransferController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForTempRecipe(
-    @Body() transferTempRecipeDto: TransferGetQtySetForTempRecipe,
+    @Param() TransferGetQtySetForTempRecipe: TransferGetQtySetForTempRecipe,
   ) {
     return await this.transferService.transferGetQtysetForTempRecipe(
-      transferTempRecipeDto,
+      TransferGetQtySetForTempRecipe,
     );
   }
 
