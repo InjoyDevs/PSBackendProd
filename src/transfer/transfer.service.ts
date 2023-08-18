@@ -24,7 +24,6 @@ export class TransferService {
     @InjectRepository(Transfer)
     private transferRepository: Repository<Transfer>,
     private deviceService: DeviceService,
-    private recipeService: RecipeService,
   ) {}
 
   async createTransfer(transfer: Transfer): Promise<Transfer> {
@@ -32,18 +31,34 @@ export class TransferService {
   }
 
   async transferGetQtySetForRefill(
-    transferRefillDto: TransferGetQtySetForRefillDto,
+    queryDto: TransferGetQtySetForRefillDto,
   ): Promise<string> {
-    const findHub = transferRefillDto.hubId; // implement entity for hub
-    const findDock = transferRefillDto.dockId; // implement entity for dock
-    const findDispenser = transferRefillDto.dispenserId; // implement entity for dispenser
+    // Destructure properties from queryDto
+    const { hubId, dockId, dispenserId } = queryDto;
 
-    if (!findHub || !findDock || !findDispenser)
-      throw new NotFoundException('Hub, dock or dispenser not found');
+    try {
+      // Fetch the data from the database using the repository
+      const transferData = await this.transferRepository.findOne({
+        where: {
+          hubId,
+          dockId,
+          dispenserId,
+        },
+      });
 
-    const encryptedMessage = await this.calculateEncryptedMessage(findDock);
+      // Check if data was found, otherwise throw NotFoundException
+      if (!transferData) {
+        throw new NotFoundException('Data not found');
+      }
+      // Calculate the encrypted message
+      const encryptedMessage = this.calculateEncryptedMessage(dockId);
 
-    return `DeviceID: ${findDispenser}, DockID: ${findDock}, EncryptedMessage: ${encryptedMessage}`;
+      // Return the result
+      return `DeviceID: ${transferData.sourceDeviceId}, DockID: ${transferData.dockId}, EncryptedMessage: ${encryptedMessage}`;
+    } catch (error) {
+      // Handle exceptions, e.g., NotFoundException
+      throw new NotFoundException('Data not found');
+    }
   }
 
   private calculateEncryptedMessage(dockId: number): string {
@@ -60,6 +75,10 @@ export class TransferService {
     const findRecipe = await this.transferRepository.findOne({
       where: { id: recipeId },
     });
+
+    console.log(findRecipe);
+    console.log(transferRecipeDto);
+
     if (!findRecipe)
       throw new NotFoundException(`Recipe with id ${recipeId} not found`);
 
@@ -68,36 +87,50 @@ export class TransferService {
       where: { id: recipeId },
     });
     if (!findDevice)
-      throw new NotFoundException(`Quantity ${recipeId} not found`);
+      throw new NotFoundException(`Device with id ${recipeId} not found`);
 
     // TODO: Implement encryption logic here.
     // You can encrypt the data you want to transfer before creating the message.
-
     const encryptedMessage = 'Encrypted message for Dock execution.';
 
     // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
-    const transferredData = `DeviceID: ${findDevice.id}, DockID: ${transferRecipeDto.dockId}, EncryptedMessage: ${encryptedMessage}`;
+    const transferredData = `DeviceID: ${findRecipe.sourceDeviceId}, DockID: ${findRecipe.dockId}, EncryptedMessage: ${encryptedMessage}`;
 
     return transferredData;
   }
 
   // ------------------------------end--------------------------------------------
 
-  async transferGetQtysetForTempRecipe(
-    transferGetQtySetForTempRecipe: TransferGetQtySetForTempRecipe,
-  ) {
-    const findDevice = await this.deviceService.getDeviceById(
-      transferGetQtySetForTempRecipe.deviceId,
-    );
+  async transferGetQtySetForTempRecipe(
+    recipeId: number,
+    transferRecipeDto: TransferGetQtySetForTempRecipe,
+  ): Promise<string> {
+    // Find the stored recipe based on recipeId
+    const findRecipe = await this.transferRepository.findOne({
+      where: { id: recipeId },
+    });
 
+    console.log(findRecipe);
+    console.log(transferRecipeDto);
+
+    if (!findRecipe)
+      throw new NotFoundException(`Recipe with id ${recipeId} not found`);
+
+    // Find the device using the transferRecipeDto's recipeId
+    const findDevice = await this.transferRepository.findOne({
+      where: { id: recipeId },
+    });
     if (!findDevice)
-      throw new NotFoundException(
-        `Device with id ${transferGetQtySetForTempRecipe.deviceId} not found`,
-      );
+      throw new NotFoundException(`Device with id ${recipeId} not found`);
 
-    // TODO: This is to temperary Recipe (Personalization Test)
+    // TODO: Implement encryption logic here.
+    // You can encrypt the data you want to transfer before creating the message.
+    const encryptedMessage = 'Encrypted message for Dock execution.';
 
-    // TODO: Return: ""DeviceID, DockID, EncryptedMessage for Dock"
+    // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
+    const transferredData = `DeviceID: ${findRecipe.sourceDeviceId}, DockID: ${findRecipe.dockId}, EncryptedMessage: ${encryptedMessage}`;
+
+    return transferredData;
   }
 
   async startTransfer(deviceId: number, startTransferDto: StartTransferDto) {

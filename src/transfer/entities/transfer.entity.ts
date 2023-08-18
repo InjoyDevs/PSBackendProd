@@ -14,6 +14,9 @@ export class Transfer {
   hubId: number;
 
   @Column({ type: 'int' })
+  recipe: any;
+
+  @Column({ type: 'int' })
   dockId: number;
 
   @Column({ type: 'int' })
@@ -25,6 +28,6 @@ export class Transfer {
   @Column({ type: 'int' })
   ingredientId: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'int' })
   transferredVolume: number;
 }
