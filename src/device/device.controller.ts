@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Put, Param } from '@nestjs/common';
+import { Controller, Post, Body, Put } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { AdvsMgDevices } from './entities/device.entity';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateDeviceDto } from './dto/update-device.dto';
 
 @ApiTags('devices')
 @Controller('device')
@@ -29,8 +30,12 @@ export class DeviceController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Device not found' })
-  async proprietaryServiceUpdateDevice(@Param() id: number) {
-    return this.deviceService.proprietaryServiceUpdateDevice(id);
+  @ApiBody({
+    description: 'Request body to set inventory level within constraints',
+    type: UpdateDeviceDto,
+  })
+  async proprietaryServiceUpdateDevice(@Body() updateDevice: UpdateDeviceDto) {
+    return this.deviceService.proprietaryServiceUpdateDevice(updateDevice);
   }
 
   @Put('initialize-devies')

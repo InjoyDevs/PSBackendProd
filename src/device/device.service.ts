@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { AdvsMgDevices } from './entities/device.entity';
 import { DeviceSecondaryRepository } from './device.secondary.repository';
 import { SysCatConfig } from './entities/sys_cat_config.entity';
@@ -12,6 +12,7 @@ import { AprtMgPartDigitalId } from './entities/part/aprt_mg_part_digital_id.ent
 import { AprtMvPartDigitalId } from './entities/part/aprt_mv_part_digital_id.entity';
 import { AprtMvPartDigitalSignature } from './entities/part/aprt_mv_part_digital_signature.entity';
 import { DeviceCurrentLocation } from './entities/device_current_location.entity';
+import { UpdateDeviceDto } from './dto/update-device.dto';
 
 @Injectable()
 export class DeviceService {
@@ -103,13 +104,16 @@ export class DeviceService {
       await this.deviceRepository.save(advsMgDevice);
     }
   }
-  async proprietaryServiceUpdateDevice(deviceId: number) {
-    const findDevice = await this.deviceRepository.findOne({
-      where: { device_id: deviceId.toString() },
+  async proprietaryServiceUpdateDevice(updateDeviceData: UpdateDeviceDto) {
+    // const findDevice = await this.deviceRepository.findOne({
+    //   where: { device_id: deviceId.toString() },
+    // });
+    // if (!findDevice)
+    //   throw new NotFoundException(`Device with id ${deviceId} not found`);
+    // // TODO:: implement code to update/add this device to the in-memory SQLite DB
+    await this.deviceRepository.save({
+      ...(updateDeviceData as unknown as DeepPartial<AdvsMgDevices>[]),
     });
-    if (!findDevice)
-      throw new NotFoundException(`Device with id ${deviceId} not found`);
-    // TODO:: implement code to update/add this device to the in-memory SQLite DB
   }
   async getDeviceById(id: number): Promise<AdvsMgDevices> {
     const device = await this.deviceRepository.findOne({
