@@ -15,8 +15,7 @@ import {
   TransferGetQtySetForRecipeDto,
   StartTransferDto,
   UpdateTransferDto,
-  // @typescript-eslint/no-unused-vars
-  TransferGetQtySetForTempRecipe,
+  TransferGetQtySetForTempRecipe, // eslint-disable-line
 } from './dto/transfer.dto';
 
 @ApiTags('transfers')
@@ -42,7 +41,7 @@ export class TransferController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async transferGetQtySetForRefill(
-    @Query() transferRefillDto: TransferGetQtySetForRefillDto,
+    @Param() transferRefillDto: TransferGetQtySetForRefillDto,
   ) {
     return await this.transferService.transferGetQtySetForRefill(
       transferRefillDto,

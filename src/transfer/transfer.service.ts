@@ -52,7 +52,7 @@ export class TransferService {
     );
 
     // Return the result
-    return `DeviceID: ${transferData.dispenserId}, DockID: ${transferData.dockId}, EncryptedMessage: ${encryptedMessage}`;
+    return `DeviceID: ${transferData.sourceDeviceId}, DockID: ${transferData.dockId}, EncryptedMessage: ${encryptedMessage}`;
   }
 
   private calculateEncryptedMessage(dockId: number): string {
