@@ -26,7 +26,7 @@ export class DockService {
       throw new NotFoundException(`Dock with id ${dockId} not found`);
     }
     dock.public_key = publicKey;
-    dock.save();
+    await this.dockEncryptionRepository.save(dock);
     return dock;
   }
 }
