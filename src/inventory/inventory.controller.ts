@@ -54,9 +54,6 @@ export class InventoryController {
 
   @Get('level/:id')
   @ApiOperation({ summary: 'Get inventory level for a device' })
-  @ApiResponse({
-    status: 200,
-  })
   @ApiParam({
     name: 'id',
     description: 'Enter Inventory  Id',
