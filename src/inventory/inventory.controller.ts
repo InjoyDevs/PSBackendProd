@@ -53,7 +53,10 @@ export class InventoryController {
   }
 
   @Get('level/:id')
-  @ApiOperation({ summary: 'Get inventory level for a device' })
+  @ApiOperation({
+    summary:
+      'Get inventory level for a device --------------Done--------------',
+  })
   @ApiResponse({
     status: 200,
   })
@@ -72,7 +75,10 @@ export class InventoryController {
   }
 
   @Post('level/:id')
-  @ApiOperation({ summary: 'Set inventory level for a device' })
+  @ApiOperation({
+    summary:
+      'Set inventory level for a device --------------Done--------------',
+  })
   @ApiResponse({
     status: 201,
     description: 'Inventory level set successfully',
@@ -95,7 +101,10 @@ export class InventoryController {
   }
 
   @Put('level/:id')
-  @ApiOperation({ summary: 'Alter inventory level for a device' })
+  @ApiOperation({
+    summary:
+      'Alter inventory level for a device --------------Done--------------',
+  })
   @ApiResponse({
     status: 200,
     description: 'Inventory level altered successfully',
