@@ -2,9 +2,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('dock_encrpytion')
 export class DockEncryption {
-  save() {
-    throw new Error('Method not implemented.');
-  }
   @PrimaryGeneratedColumn('increment') id!: number;
 
   @Column()

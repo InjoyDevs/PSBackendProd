@@ -61,7 +61,7 @@ export class DeviceController {
   }
 
   @Get('docks/public_key/:id')
-  @ApiOperation({ summary: 'Get dock details by dock ID' })
+  @ApiOperation({ summary: 'Get dock details by dock ID', tags: ['done'] })
   @ApiResponse({
     status: 200,
   })
@@ -75,7 +75,7 @@ export class DeviceController {
   }
 
   @Post('docks/public_key')
-  @ApiOperation({ summary: 'Update dock details by dock ID' })
+  @ApiOperation({ summary: 'Update dock details by dock ID', tags: ['done'] })
   @ApiResponse({
     status: 200,
     description: 'Dock details updated successfully',
