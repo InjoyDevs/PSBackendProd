@@ -6,7 +6,6 @@ import {
   Param,
   HttpCode,
   Query,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { TransferService } from './transfer.service';
 import { Transfer } from './entities/transfer.entity';
@@ -20,7 +19,6 @@ import {
 import {
   TransferGetQtySetForRefillDto,
   TransferGetQtySetForRecipeDto,
-  TransferGetQtySetForTempRecipe,
   StartTransferDto,
   UpdateTransferDto,
 } from './dto/transfer.dto';
