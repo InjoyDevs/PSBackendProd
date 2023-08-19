@@ -6,10 +6,17 @@ import {
   Param,
   HttpCode,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TransferService } from './transfer.service';
 import { Transfer } from './entities/transfer.entity';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   TransferGetQtySetForRefillDto,
   TransferGetQtySetForRecipeDto,
@@ -64,19 +71,32 @@ export class TransferController {
     );
   }
 
-  @Get('qty-set-for-temp-recipe')
+  @Get('qty-set-for-temp-recipe/:id')
   @ApiOperation({ summary: 'Get Quantity Set for Recipe' })
   @ApiResponse({
     status: 200,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiQuery({
+    name: 'recipeId',
+  })
+  @ApiQuery({
+    name: 'dockId',
+  })
+  @ApiParam({
+    name: 'id',
+  })
   async transferGetQtySetForTempRecipe(
-    @Param('id') recipeId: number, // Use @Param instead of @Query
-    @Query() transferTempRecipeDto: TransferGetQtySetForTempRecipe,
+    @Param('id') recipeIdFrom: number, // Use @Param instead of @Query
+    @Query('dockId') dockId: number,
+    @Query('recipeId') recipeIdTo: number,
   ) {
     return await this.transferService.transferGetQtySetForTempRecipe(
-      recipeId,
-      transferTempRecipeDto,
+      recipeIdFrom,
+      {
+        recipeId: recipeIdTo,
+        dockId: dockId,
+      },
     );
   }
 

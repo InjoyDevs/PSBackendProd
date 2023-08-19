@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -104,32 +105,47 @@ export class TransferService {
     recipeId: number,
     transferRecipeDto: TransferGetQtySetForTempRecipe,
   ): Promise<string> {
-    // Find the stored recipe based on recipeId
-    const findRecipe = await this.transferRepository.findOne({
-      where: { id: recipeId },
-    });
+    try {
+      console.log('---- input data ----');
+      console.log(recipeId, typeof recipeId);
+      console.log(transferRecipeDto.dockId, typeof transferRecipeDto.dockId);
+      console.log(
+        transferRecipeDto.recipeId,
+        typeof transferRecipeDto.recipeId,
+      );
+      console.log('---- input data ----');
+      // Find the stored recipe based on recipeId
+      const findRecipe = await this.transferRepository.findOne({
+        where: { id: recipeId },
+      });
+      // console.log(transferGetQtySetForTempRecipe.findRecipe)
+      console.log(findRecipe);
+      console.log(transferRecipeDto);
 
-    console.log(findRecipe);
-    console.log(transferRecipeDto);
+      if (!findRecipe)
+        throw new NotFoundException(`Recipe with id ${recipeId} not found`);
 
-    if (!findRecipe)
-      throw new NotFoundException(`Recipe with id ${recipeId} not found`);
+      // Find the device using the transferRecipeDto's recipeId
+      const findDevice = await this.transferRepository.findOne({
+        where: { id: recipeId },
+      });
+      if (!findDevice)
+        throw new NotFoundException(`Device with id ${recipeId} not found`);
 
-    // Find the device using the transferRecipeDto's recipeId
-    const findDevice = await this.transferRepository.findOne({
-      where: { id: recipeId },
-    });
-    if (!findDevice)
-      throw new NotFoundException(`Device with id ${recipeId} not found`);
+      // TODO: Implement encryption logic here.
+      // You can encrypt the data you want to transfer before creating the message.
+      const encryptedMessage = 'Encrypted message for Dock execution.';
 
-    // TODO: Implement encryption logic here.
-    // You can encrypt the data you want to transfer before creating the message.
-    const encryptedMessage = 'Encrypted message for Dock execution.';
+      // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
+      const transferredData = `DeviceID: ${findRecipe.sourceDeviceId}, DockID: ${findRecipe.dockId}, EncryptedMessage: ${encryptedMessage}`;
 
-    // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
-    const transferredData = `DeviceID: ${findRecipe.sourceDeviceId}, DockID: ${findRecipe.dockId}, EncryptedMessage: ${encryptedMessage}`;
-
-    return transferredData;
+      return transferredData;
+    } catch (e) {
+      console.log('---- error ----');
+      console.error(e);
+      console.log('---- error ----');
+      throw new InternalServerErrorException();
+    }
   }
 
   async startTransfer(deviceId: number, startTransferDto: StartTransferDto) {
