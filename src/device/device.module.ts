@@ -14,6 +14,8 @@ import { DeviceCurrentLocation } from './entities/device_current_location.entity
 import { AdvsMvDeviceIoDock } from './entities/dock/advs_mv_device_io_dock.entity';
 import { AdvsMvIoDockPartsLink } from './entities/dock/advs_mv_io_dock_parts_link.entity';
 import { DockPointNozzleTankIngMapping } from './entities/dock/dock_point_nozzle_tank_ing_mapping.entity';
+import { DockService } from './dock.service';
+import { DockEncryption } from './entities/dock/dock_encrpytion.primary.entity';
 
 @Module({
   imports: [
@@ -28,11 +30,12 @@ import { DockPointNozzleTankIngMapping } from './entities/dock/dock_point_nozzle
       AdvsMvDeviceIoDock,
       AdvsMvIoDockPartsLink,
       DockPointNozzleTankIngMapping,
+      DockEncryption,
     ]),
     TypeOrmModule.forFeature([], SECONDARYDATABASE),
   ],
-  providers: [DeviceService, DeviceSecondaryRepository],
+  providers: [DeviceService, DeviceSecondaryRepository, DockService],
   controllers: [DeviceController],
-  exports: [DeviceService],
+  exports: [DeviceService, DockService],
 })
 export class DeviceModule {}
