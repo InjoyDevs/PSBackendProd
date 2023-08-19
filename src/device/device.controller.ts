@@ -34,7 +34,9 @@ export class DeviceController {
   }
 
   @Put('initialize-devies')
-  @ApiOperation({ summary: 'Initialize all devices' })
+  @ApiOperation({
+    summary: 'Initialize all devices ---------------Done------------',
+  })
   @ApiResponse({
     status: 200,
     description: 'All devices have been successfully initialized',

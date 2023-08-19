@@ -129,13 +129,19 @@ export class InventoryController {
   }
 
   @Get('property')
-  @ApiOperation({ summary: 'Get encrypted properties for all batches' })
+  @ApiOperation({
+    summary:
+      'Get encrypted properties for all batches ---------------Done------------ (Encryption is left)',
+  })
   async getProperties(): Promise<any> {
     return await this.inventoryService.getProperties();
   }
 
   @Post('property')
-  @ApiOperation({ summary: 'Set encrypted properties for a specific batch' })
+  @ApiOperation({
+    summary:
+      'Set encrypted properties for a specific batch ---------------Done------------ (Encryption is left)',
+  })
   async setProperties(
     @Body() inventoryPropertyDto: InventoryPropertyDto,
   ): Promise<any> {
