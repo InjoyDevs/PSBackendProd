@@ -23,6 +23,7 @@ import encryptionConfig from './config/encryption.config';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
 import { LoggerModule } from 'nestjs-pino';
+import { KafkaModule } from './kafka/kafka.module';
 
 export const setUpLoggerModule = () => {
   if (process.env.NODE_ENV === 'production') {
@@ -148,6 +149,7 @@ export const setUpLoggerModule = () => {
     OrderModule,
     PumpModule,
     TransferModule,
+    KafkaModule,
   ],
 })
 export class AppModule {}
