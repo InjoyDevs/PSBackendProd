@@ -93,7 +93,6 @@ export class TransferService {
       throw new NotFoundException('Recipe not found');
     }
 
-    console.log('hello', id);
     return { name: recipe.name };
   }
 
