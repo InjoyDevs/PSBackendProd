@@ -9,6 +9,9 @@ export class TransferGetQtySetForRefillDto {
 
   @ApiProperty({ description: 'The ID of the dispenser' })
   dispenserId: number;
+
+  @ApiProperty({ description: 'The ID of the source device' })
+  sourceDeviceId: number;
 }
 
 export class TransferGetQtySetForRecipeDto {
