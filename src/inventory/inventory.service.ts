@@ -2,12 +2,22 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Inventory } from './entities/inventory.entity';
 import { AdvsMgDevices } from 'src/device/entities/device.entity';
 import { InventoryPropertyDto } from './dto/inventory-property.dto';
+import {
+  CreateInventoryDto,
+  CreateInventoryResponseDto,
+} from './dto/create-inventory.dto';
+import { DockPointNozzleTankIngMapping } from 'src/device/entities/dock/dock_point_nozzle_tank_ing_mapping.entity';
+import { AdvsMvDeviceIoDock } from 'src/device/entities/dock/advs_mv_device_io_dock.entity';
+import { InvtTdDvsIngrBatchVolStat } from './entities/invt_td_dvs_ingr_batch_vol_stat.entity';
+import { InvtTdIngredientBatch } from './entities/invt_td_ingredient_batch.entity';
+import { IngrMgIngredients } from 'src/ingredient/entities/ingredient.entity';
 
 @Injectable()
 export class InventoryService {
@@ -17,11 +27,172 @@ export class InventoryService {
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
     @InjectRepository(AdvsMgDevices)
-    private deviceRepository: Repository<AdvsMgDevices>,
+    private readonly deviceRepository: Repository<AdvsMgDevices>,
+    @InjectRepository(AdvsMvDeviceIoDock)
+    private readonly advsMvDeviceIoDock: Repository<AdvsMvDeviceIoDock>,
+    @InjectRepository(InvtTdDvsIngrBatchVolStat)
+    private readonly invtTdDvsIngrBatchVolStat: Repository<InvtTdDvsIngrBatchVolStat>,
+    @InjectRepository(InvtTdIngredientBatch)
+    private readonly invtTdIngredientBatch: Repository<InvtTdIngredientBatch>,
+    @InjectRepository(IngrMgIngredients)
+    private readonly ingrMgIngredients: Repository<IngrMgIngredients>,
   ) {}
 
-  async createInventory(inventory: Inventory): Promise<Inventory> {
-    return await this.inventoryRepository.save(inventory);
+  async createInventory(
+    inventory: CreateInventoryDto,
+  ): Promise<CreateInventoryResponseDto> {
+    const validatedDeviceData = await this.deviceRepository.findOne({
+      where: {
+        device_id: inventory.deviceId.toString(),
+      },
+    });
+    if (validatedDeviceData === null) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: 'No Device Found',
+      });
+    }
+    if (validatedDeviceData.is_in_service === false) {
+      throw new UnprocessableEntityException({
+        status: 'FAILED',
+        message: 'Device is not active',
+      });
+    }
+
+    const validatedDockData = await this.advsMvDeviceIoDock.findOne({
+      where: {
+        device_id: inventory.deviceId,
+      },
+    });
+    if (validatedDockData === null) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: 'No Dock Found',
+      });
+    }
+
+    let dockTankMapping: DockPointNozzleTankIngMapping | null = null;
+    for (
+      let i = 0;
+      i < validatedDockData.dockPointNozzleTankIngMappings.length;
+      i++
+    ) {
+      if (
+        validatedDockData.dockPointNozzleTankIngMappings[i].dock_point_id ===
+          inventory.dockId &&
+        validatedDockData.dockPointNozzleTankIngMappings[i]
+          .tank_ing_mapping_id === inventory.tankId
+      ) {
+        dockTankMapping = validatedDockData.dockPointNozzleTankIngMappings[i];
+        break;
+      }
+    }
+
+    if (dockTankMapping === null) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: 'No Dock Tank Link Found',
+      });
+    }
+
+    if (
+      dockTankMapping.advsMtIngrTankLinking.tank.capacity < inventory.quantity
+    ) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: 'Tank capacity reached will over flow',
+      });
+    }
+
+    // TODO: Check if hub is having the content mentioned to send the fill request
+    // TODO: Write algorithm to mask the current volume
+
+    if (
+      dockTankMapping.advsMtIngrTankLinking.ing_id !== inventory.ingredientId
+    ) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: "Can't fill into the tank wrong ingredient id mentioned",
+      });
+    }
+
+    const ingredientData = await this.ingrMgIngredients.findOne({
+      where: {
+        ing_id: inventory.ingredientId.toString(),
+      },
+    });
+
+    if (ingredientData === null) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: 'Ingredient Data Not Found',
+      });
+    }
+
+    // TODO: Get the latest volume present in inventory
+    const inventoryIngredientVolumeData =
+      await this.invtTdDvsIngrBatchVolStat.findOne({
+        where: {
+          ingredient_id: inventory.ingredientId,
+          device_id: inventory.deviceId,
+        },
+      });
+
+    const currentVolumeInTank =
+      inventoryIngredientVolumeData?.current_volume || 0;
+    // TODO: Write algorithm to normalize the value and pass the condition till 5% less check and
+    // store the value to a variable
+    if (
+      currentVolumeInTank + inventory.quantity >
+      dockTankMapping.advsMtIngrTankLinking.tank.capacity
+    ) {
+      throw new NotFoundException({
+        status: 'FAILED',
+        message: 'Tank capacity reached will over flow',
+      });
+    }
+
+    // TODO: Send the instruction to fill the tank
+    // TODO: Check for the status of the transfer
+
+    // TODO: Create batch and link them to the inventory
+    const newBatch = this.invtTdIngredientBatch.create({
+      // batch_id: `BATCH_${inventory.ingredientId}_${new Date().toISOString()}`,
+      ingredient_id: inventory.ingredientId,
+      qty: inventory.quantity,
+      expiry_date: inventory.expiration.toString(),
+    });
+
+    newBatch.batch_id = newBatch.id.toString();
+    await this.invtTdIngredientBatch.save(newBatch);
+
+    await this.invtTdDvsIngrBatchVolStat.save(
+      this.invtTdDvsIngrBatchVolStat.create({
+        device_id: inventory.deviceId,
+        ingredient_id: inventory.ingredientId,
+        current_batch_id: newBatch.id,
+        current_volume: inventory.quantity + currentVolumeInTank,
+        ingredient: ingredientData,
+        currentBatch: newBatch,
+      }),
+    );
+
+    const inventoryData = await this.inventoryRepository.save(
+      this.inventoryRepository.create({
+        ingredientId: inventory.ingredientId,
+        currentVolume: inventory.quantity + currentVolumeInTank,
+        capacity: dockTankMapping.advsMtIngrTankLinking.tank.capacity,
+        deviceId: validatedDeviceData.id,
+      }),
+    );
+
+    return {
+      status: 'SUCCESS',
+      message: 'Inventory Intialized successfully',
+      data: {
+        inventoryId: inventoryData.id,
+      },
+    };
   }
 
   async getInventoriesByIds(ids: number[]): Promise<Inventory[]> {

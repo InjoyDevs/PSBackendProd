@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Param, Get, Put } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
-import { Inventory } from './entities/inventory.entity';
 import {
   ApiOperation,
   ApiParam,
@@ -13,6 +12,10 @@ import {
   InventoryPropertyDto,
   SetInventoryDto,
 } from './dto/inventory-property.dto';
+import {
+  CreateInventoryDto,
+  CreateInventoryResponseDto,
+} from './dto/create-inventory.dto';
 
 @ApiTags('inventories')
 @Controller('inventories')
@@ -24,9 +27,12 @@ export class InventoryController {
   @ApiResponse({
     status: 201,
     description: 'The inventory has been successfully created.',
+    type: CreateInventoryResponseDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async createInventory(@Body() inventory: Inventory): Promise<Inventory> {
+  async createInventory(
+    @Body() inventory: CreateInventoryDto,
+  ): Promise<CreateInventoryResponseDto> {
     return this.inventoryService.createInventory(inventory);
   }
 

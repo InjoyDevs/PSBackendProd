@@ -33,6 +33,9 @@ import { DockPointNozzleTankIngMapping } from './entities/dock/dock_point_nozzle
   ],
   providers: [DeviceService, DeviceSecondaryRepository],
   controllers: [DeviceController],
-  exports: [DeviceService],
+  exports: [
+    DeviceService,
+    TypeOrmModule.forFeature([DockPointNozzleTankIngMapping]),
+  ],
 })
 export class DeviceModule {}
