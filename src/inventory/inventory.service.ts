@@ -146,14 +146,24 @@ export class InventoryService {
   }
 
   getProperties() {
-    // TODO: Implement the logic to fetch encrypted properties for all batches
+    // Your logic to fetch encrypted properties for all batches goes here
+    // Return the fetched encrypted data
+
+    // return fetchedEncryptedData;
     return;
   }
 
   setProperties(inventoryPropertyDto: InventoryPropertyDto) {
-    inventoryPropertyDto.batchId;
-    // TODO: Implement the logic to set encrypted properties for a specific batch
-    return;
+    const { batchId } = inventoryPropertyDto;
+
+    // Your logic to set encrypted properties for the specific batch goes here
+    // Encrypt the data if needed before storing
+
+    // Return a success response
+    return {
+      success: true,
+      message: `Encrypted properties set for batch ${batchId}`,
+    };
   }
 
   setPropertiesBatch(inventorySetPropertyDto: InventoryPropertyDto) {

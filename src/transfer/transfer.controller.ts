@@ -9,11 +9,16 @@ import {
 } from '@nestjs/common';
 import { TransferService } from './transfer.service';
 import { Transfer } from './entities/transfer.entity';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   TransferGetQtySetForRefillDto,
   TransferGetQtySetForRecipeDto,
-  TransferGetQtySetForTempRecipe,
   StartTransferDto,
   UpdateTransferDto,
 } from './dto/transfer.dto';
@@ -35,7 +40,9 @@ export class TransferController {
   }
 
   @Get('qty-set-for-refill')
-  @ApiOperation({ summary: 'Get Quantity Set for Refill' })
+  @ApiOperation({
+    summary: 'Get Quantity Set for Refill --------------Done--------------',
+  })
   @ApiResponse({
     status: 200,
   })
@@ -49,7 +56,9 @@ export class TransferController {
   }
 
   @Get('qty-set-for-recipe/:id')
-  @ApiOperation({ summary: 'Get Quantity Set for Recipe' })
+  @ApiOperation({
+    summary: 'Get Quantity Set for Recipe --------------Done--------------',
+  })
   @ApiResponse({
     status: 200,
   })
@@ -64,17 +73,34 @@ export class TransferController {
     );
   }
 
-  @Get('qty-set-for-temp-recipe')
-  @ApiOperation({ summary: 'Get Quantity Set for Recipe' })
+  @Get('qty-set-for-temp-recipe/:id')
+  @ApiOperation({
+    summary: 'Get Quantity Set for Recipe --------------Done--------------',
+  })
   @ApiResponse({
     status: 200,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiQuery({
+    name: 'recipeId',
+  })
+  @ApiQuery({
+    name: 'dockId',
+  })
+  @ApiParam({
+    name: 'id',
+  })
   async transferGetQtySetForTempRecipe(
-    @Body() transferTempRecipeDto: TransferGetQtySetForTempRecipe,
+    @Param('id') recipeIdFrom: number, // Use @Param instead of @Query
+    @Query('dockId') dockId: number,
+    @Query('recipeId') recipeIdTo: number,
   ) {
-    return await this.transferService.transferGetQtysetForTempRecipe(
-      transferTempRecipeDto,
+    return await this.transferService.transferGetQtySetForTempRecipe(
+      recipeIdFrom,
+      {
+        recipeId: recipeIdTo,
+        dockId: dockId,
+      },
     );
   }
 

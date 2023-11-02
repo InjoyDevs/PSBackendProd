@@ -14,9 +14,9 @@ import {
   StartTransferDto,
   UpdateTransferDto,
 } from './dto/transfer.dto';
-
 import { DeviceService } from 'src/device/device.service';
-import { RecipeService } from 'src/recipe/recipe.service';
+import { Recipe } from 'src/recipe/entities/recipe.primary.entity';
+import { Inventory } from 'src/inventory/entities/inventory.entity';
 
 @Injectable()
 export class TransferService {
@@ -24,80 +24,155 @@ export class TransferService {
     @InjectRepository(Transfer)
     private transferRepository: Repository<Transfer>,
     private deviceService: DeviceService,
-    private recipeService: RecipeService,
+    @InjectRepository(Recipe)
+    private recipeRepository: Repository<Recipe>,
+    @InjectRepository(Inventory)
+    private inventoryRepository: Repository<Inventory>,
   ) {}
 
   async createTransfer(transfer: Transfer): Promise<Transfer> {
     return await this.transferRepository.save(transfer);
   }
 
-  async transferGetQtySetForRefill(
-    transferRefillDto: TransferGetQtySetForRefillDto,
-  ): Promise<string> {
-    const findHub = transferRefillDto.hubId; // implement entity for hub
-    const findDock = transferRefillDto.dockId; // implement entity for dock
-    const findDispenser = transferRefillDto.dispenserId; // implement entity for dispenser
-
-    if (!findHub || !findDock || !findDispenser)
-      throw new NotFoundException('Hub, dock or dispenser not found');
-
-    const encryptedMessage = await this.calculateEncryptedMessage(findDock);
-
-    return `DeviceID: ${findDispenser}, DockID: ${findDock}, EncryptedMessage: ${encryptedMessage}`;
+  async getAllRecipes(): Promise<{ name: string }[]> {
+    const allRecipes = await this.recipeRepository.find();
+    return allRecipes.map((recipe) => ({ name: recipe.name }));
   }
 
-  private calculateEncryptedMessage(dockId: number): string {
-    return `EncryptedMessageForDock_${dockId}`;
+  async getAllIngredients(): Promise<{ volume: string }[]> {
+    const allIngredients = await this.inventoryRepository.find();
+    return allIngredients.map((ingredient) => ({
+      volume: ingredient.currentVolume.toString(),
+    }));
+  }
+
+  async transferGetQtySetForRefill(
+    queryDto: TransferGetQtySetForRefillDto,
+  ): Promise<any> {
+    const { hubId, dockId, dispenserId, sourceDeviceId } = queryDto;
+    try {
+      const transferData = await this.transferRepository.findOne({
+        where: {
+          hubId: hubId,
+          dockId: dockId,
+          dispenserId: dispenserId,
+          sourceDeviceId: sourceDeviceId,
+        },
+      });
+      const allRecipes = await this.getAllRecipes();
+      if (!transferData) {
+        throw new NotFoundException('Data not found');
+      }
+      const allIngredients = await this.getAllIngredients();
+
+      const encryptedMessage = await this.calculateEncryptedMessage(
+        transferData.dockId,
+      );
+
+      return {
+        deviceId: transferData.sourceDeviceId,
+        recipeName: allRecipes,
+        DockId: transferData.dockId,
+        allIngredients: allIngredients,
+        EncryptedMessage: encryptedMessage,
+      };
+    } catch (error) {
+      throw new NotFoundException('Data not found');
+    }
+  }
+
+  async calculateEncryptedMessage(dockId: number) {
+    return await `EncryptedMessageForDock_${dockId}`;
   }
 
   // -------------------------------Done--------------------------------------------
 
+  async getRecipeById(id: number): Promise<{ name: string }> {
+    const recipe = await this.recipeRepository.findOne({ where: { id: id } });
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found');
+    }
+
+    return { name: recipe.name };
+  }
+
   async transferGetQtySetForRecipe(
     recipeId: number,
-    transferRecipeDto: TransferGetQtySetForRecipeDto,
-  ): Promise<string> {
-    // Find the stored recipe based on recipeId
-    const findRecipe = await this.transferRepository.findOne({
-      where: { id: recipeId },
-    });
-    if (!findRecipe)
-      throw new NotFoundException(`Recipe with id ${recipeId} not found`);
+    queryDto: TransferGetQtySetForRecipeDto,
+  ): Promise<any> {
+    const { dockId } = queryDto;
+    try {
+      const transferData = await this.transferRepository.findOne({
+        where: {
+          dockId: dockId,
+        },
+      });
 
-    // Find the device using the transferRecipeDto's recipeId
-    const findDevice = await this.transferRepository.findOne({
-      where: { id: recipeId },
-    });
-    if (!findDevice)
-      throw new NotFoundException(`Quantity ${recipeId} not found`);
+      if (!transferData) {
+        throw new NotFoundException('Data not found');
+      }
 
-    // TODO: Implement encryption logic here.
-    // You can encrypt the data you want to transfer before creating the message.
+      const recipe = await this.getRecipeById(recipeId);
+      const allIngredients = await this.getAllIngredients();
+      const encryptedMessage = await this.calculateEncryptedMessage(
+        transferData.dockId,
+      );
 
-    const encryptedMessage = 'Encrypted message for Dock execution.';
+      return {
+        deviceId: transferData.sourceDeviceId,
+        recipeName: recipe,
+        DockId: transferData.dockId,
+        allIngredients: allIngredients,
+        EncryptedMessage: encryptedMessage,
+      };
+    } catch (error) {
+      throw new NotFoundException('Data not found');
+    }
+  }
 
-    // Construct the transferred data message including Device ID, Dock ID, and Encrypted Message.
-    const transferredData = `DeviceID: ${findDevice.id}, DockID: ${transferRecipeDto.dockId}, EncryptedMessage: ${encryptedMessage}`;
-
-    return transferredData;
+  async getRecipeAndTransferData(
+    recipeId: number,
+    queryDto: TransferGetQtySetForRecipeDto,
+  ): Promise<any> {
+    return this.transferGetQtySetForRecipe(recipeId, queryDto);
   }
 
   // ------------------------------end--------------------------------------------
+  // TODO:
+  // memory database -> transaction start to end memory and completion in main database
 
-  async transferGetQtysetForTempRecipe(
-    transferGetQtySetForTempRecipe: TransferGetQtySetForTempRecipe,
-  ) {
-    const findDevice = await this.deviceService.getDeviceById(
-      transferGetQtySetForTempRecipe.deviceId,
-    );
+  async transferGetQtySetForTempRecipe(
+    recipeId: number,
+    transferRecipeDto: TransferGetQtySetForTempRecipe,
+  ): Promise<any> {
+    const { dockId } = transferRecipeDto;
+    try {
+      const transferData = await this.transferRepository.findOne({
+        where: {
+          dockId: dockId,
+        },
+      });
 
-    if (!findDevice)
-      throw new NotFoundException(
-        `Device with id ${transferGetQtySetForTempRecipe.deviceId} not found`,
+      if (!transferData) {
+        throw new NotFoundException('Data not found');
+      }
+
+      const recipe = await this.getRecipeById(recipeId);
+      const allIngredients = await this.getAllIngredients();
+      const encryptedMessage = await this.calculateEncryptedMessage(
+        transferData.dockId,
       );
 
-    // TODO: This is to temperary Recipe (Personalization Test)
-
-    // TODO: Return: ""DeviceID, DockID, EncryptedMessage for Dock"
+      return {
+        deviceId: transferData.sourceDeviceId,
+        recipeName: recipe,
+        DockId: transferData.dockId,
+        allIngredients: allIngredients,
+        EncryptedMessage: encryptedMessage,
+      };
+    } catch (error) {
+      throw new NotFoundException('Data not found');
+    }
   }
 
   async startTransfer(deviceId: number, startTransferDto: StartTransferDto) {
